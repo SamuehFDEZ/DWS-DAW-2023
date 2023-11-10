@@ -15,20 +15,22 @@ $peseta = $_GET["peseta"];
 $conversor = $_GET["conversor"];
 
 
+if($conversor === "peseta"){
+    $resultados = $euros/166.386;
+    echo "La cantidad de pesetas a euros es ". round($resultados, 4). " euros\n";
+}
+
+
 if($conversor === "euro"){
     $resultado = $euros*166.386;
     echo "La cantidad de euros a pesetas es ". round($resultado, 4). " pesetas\n";
 } 
-else if($conversor === "peseta"){
-    echo $opciones;
-    $resultados = $peseta/166.386;
-    echo "La cantidad de pesetas a euros es ". round($resultados, 4). " euros\n";
-}
+
 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

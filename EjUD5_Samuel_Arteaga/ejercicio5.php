@@ -9,6 +9,35 @@ si es:
 2. una letra minúscula 5. un carácter de puntuación
 3. un carácter numérico 6. un carácter especial
 Se debe usar funciones para la comprobación de datos */
+
+$caracter = $_GET["caracter"];
+
+if (isset($_GET["enviar"])) {
+
+    if (ctype_upper($caracter)) { 
+        echo "El caracter $caracter es mayúscula \n";
+    }
+    else if(ctype_lower($caracter)){
+        echo "El caracter $caracter es minúscula \n";
+
+    }                                                                              
+    else if(ctype_digit($caracter)){
+        echo "El caracter $caracter es númerico \n"; 
+    }
+    else if(ctype_space($caracter)){
+        echo "El caracter $caracter es un espacio en blanco \n"; 
+
+    }
+    else if(ctype_punct($caracter)){
+        echo "El caracter $caracter es un carácter de puntuación \n"; 
+
+    }
+
+    if(ctype_alnum($caracter)== false){
+        echo "El caracter $caracter es un carácter especial \n"; 
+
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +48,11 @@ Se debe usar funciones para la comprobación de datos */
     <title>Samuel Arteaga</title>
 </head>
 <body>
-    
+    <form action="ejercicio5.php" method="get">
+        <label for="caracter">Comprobador de caracteres</label><br><br>
+        <input type="text" name="caracter"><br><br>
+        <input type="submit" name="enviar" value="Enviar">
+
+    </form>
 </body>
 </html>
