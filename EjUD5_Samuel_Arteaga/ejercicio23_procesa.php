@@ -1,27 +1,31 @@
 <?php 
+        $nombre = $_REQUEST["nombre"];
+        $apellidos = $_REQUEST["apellidos"];
 
-if (isset($_POST["enviar"])) {
-    echo "Nombre: ". $_POST["nombre"]. "<br>";
+        echo "Nombre: ". $nombre. "<br>";
 
-    echo "Apellidos: ". $_POST["apellidos"]. "<br>";
+        echo "Apellidos: ". $apellidos. "<br>";
 
-    echo "Estudios: ". $_POST["estudios"]. "<br>";
+        echo "Estudios: ". $_GET["estudios"]. "<br>";
 
-    $trabajos = $_POST["trabajo"];
+        $trabajos = $_GET["trabajo"];
 
-    foreach ($trabajos as $trabajo) {
-        echo "Trabajo/s: ". $trabajo. "<br>";
-    }
+        foreach ($trabajos as $trabajo) {
+            echo "Trabajo/s: ". $trabajo. "<br>";
+        }
+        
+        $hobbies = $_GET["hobbies"];
+
+        if (isset($hobbies)) {
+            if(count($hobbies) > 0){
+                foreach ($hobbies as $hobbie) {
+                    echo "Hobbie/s: ". $hobbie. "<br>";
+                }
+            }
+        }
+
+        $texto = $_GET["texto"];
+
+        echo "Notaciones: $texto <br>";
     
-    $hobbies = $_POST["hobbies"];
-
-    foreach ($hobbies as $hobbie) {
-        echo "Hobbie/s: ". $hobbie. "<br>";
-    }
-
-    $texto = $_POST["texto"];
-
-    echo " $texto <br>";
-}
-
 ?>

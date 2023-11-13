@@ -1,19 +1,5 @@
 <?php 
+    $email = $_GET["correo"];
 
-$email = $_GET["correo"];
-
-if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-    echo $email."<br>";
-}
-
-if (isset($_GET["publicidad"])) {
-    echo "Ha aceptado recibir publicidad <br>";
-}
-else{
-    echo "No ha aceptado recibir publicidad <br>";
-}
-
+    echo "El usuario con email $email ha aceptado recibir publicidad <br>";
 ?>
-
-
-
