@@ -23,15 +23,22 @@ if (isset($_GET["enviar"])) {
     $costeTotal = 0;
 
     for ($i = 0; $i < count($llamada); $i++){
-        
+
         if ($llamada[$i] <= 3) { // si es menor o igual a 3 minutos se cobra 10 cent
             echo "Precio de la llamada: 10 céntimos <br>";
             $costeTotal += 10;
         }
-        
-        if ($llamada[$i] > 3) { /* si dura mas de 3, por cada minuto se cobra 5 cent, al empezar en 3 siempre se declara con ese valor la i, 
-                                siempre que itere el while le sumara segun el numero de la llamada*/
 
+        if ($llamada[$i] > 3) { 
+            /**si la llamada dura mas de 3
+             * entraremos al if y haremos lo siguiente:
+             * en la variable minutos almacenaremos la llamada
+             * menos 3 para recomprobar que es mas de 3, ese valor
+             * le añadiremos un *5 despues en otra variable
+             * llamada minu almacenaremos el 10 que sera sumado con el 
+             * valor de minutos, e imprimimos el precio y luego el 
+             * costetotal sumandole el precio
+             */
             $minutos = $llamada[$i] - 3;
             $minutos *=5;
             $minu = 10;
@@ -39,15 +46,6 @@ if (isset($_GET["enviar"])) {
             echo "Total a pagar es: ". $precio."<br>";
             $costeTotal += $precio;
 
-            // $precio = 10;
-            // $j = 3;
-            //     while ($j < $llamada[$i]) {
-            //         $precio += 5;
-            //         $j++;
-            //         $costeTotal += $precio;
-            //         echo "Precio de la llamada $precio céntimos <br>";
-
-            //     }
         }
     }
         echo "Coste total: $costeTotal";

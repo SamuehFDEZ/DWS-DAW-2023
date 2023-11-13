@@ -21,7 +21,7 @@ $barcos = array(
     "acorazado1"=> array(
         "tamaño"=> 3,
         "filaInicio"=> 8,
-        "colInicio"=> 9,
+        "colInicio"=> 7,
         "dirección"=> "horizontal"),
 
     "acorazado2"=> array(
