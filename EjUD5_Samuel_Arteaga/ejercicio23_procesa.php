@@ -1,4 +1,5 @@
 <?php 
+
         $nombre = $_REQUEST["nombre"];
         $apellidos = $_REQUEST["apellidos"];
 
@@ -8,24 +9,23 @@
 
         echo "Estudios: ". $_GET["estudios"]. "<br>";
 
-        $trabajos = $_GET["trabajo"];
+        $trabajo = $_GET["trabajo"];
 
-        foreach ($trabajos as $trabajo) {
-            echo "Trabajo/s: ". $trabajo. "<br>";
+        foreach ($trabajo as $trabajos) {
+                echo "Situación laboral: $trabajos <br>";
         }
-        
+
         $hobbies = $_GET["hobbies"];
 
-        if (isset($hobbies)) {
-            if(count($hobbies) > 0){
-                foreach ($hobbies as $hobbie) {
-                    echo "Hobbie/s: ". $hobbie. "<br>";
-                }
-            }
+        foreach ($hobbies as $hobbie) {
+                echo "Hobbies: ". $hobbie. "<br>";
         }
 
         $texto = $_GET["texto"];
 
         echo "Notaciones: $texto <br>";
+       
+
+        
     
 ?>

@@ -1,4 +1,3 @@
-
 <!-- @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
 
 23. Escribe un formulario de recogida de datos que conste de dos páginas: En la primera página
@@ -8,7 +7,7 @@ personales, nivel de estudios (desplegable), situación actual (selección múlt
 trabajando, buscando empleo, desempleado) y hobbies (marcar de varios mostrados y poner otro
 con opción a introducir texto) -->
 <?php 
-
+    /**Funcion para validar si en los campos de text si esta o no vacio */
     function validaRequerido($valor){ //Obliga a introducir datos en campos requeridos
         if(trim($valor) == ''){
             return false;
@@ -18,7 +17,37 @@ con opción a introducir texto) -->
         }
     }
 
+    /**funcion para validar los selects */
+    function validacionSelect($valor){
+        if (isset($valor) === false) {
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 
+        /**funcion para validar los checkbox
+         * 1º comprobamos que esta relleno (alguno de los checkbox)
+         * 2º Y que no esté vacio (el array de checkbox)
+         */
+
+    function validarCheckboxes($valor) {
+     // Verifica si el parámetro está definido y no está vacío
+        if (isset($_GET[$valor]) && is_array($_GET[$valor])) {
+            // Al menos un checkbox está marcado
+            return true;
+        } else {
+            // Ningún checkbox está marcado
+            return false;
+        }
+    }
+        
+    // Ningún checkbox está marcado o el valor no es válido
+    
+    //definimos todas las variables
+
+    $link = "";
     //Guarda los valores de los campos en variables, siempre y cuando se haya enviado el formulario, si no guardará NULL
     $nombre = isset($_GET["nombre"]) ? $_GET["nombre"] : null;
     $apellidos = isset($_GET["apellidos"]) ? $_GET["apellidos"] : null;
@@ -28,6 +57,11 @@ con opción a introducir texto) -->
     $texto = isset($_GET["texto"]) ? $_GET["texto"] : null;
     $errores = array(); //Este array guardará los errores de validación que surjan.
     //Pregunta si está llegando una petición por POST, lo que significa que el usuario envió el formulario.
+       
+    /**Para cada if validaremos que si no lo valida, lo introduzca en el array de 
+     * errores
+     * en caso contrario iremos construyendo la url
+     */
         if (!validaRequerido($nombre)) { //Valida que el campo nombre no esté vacío.
             $errores[] = "El campo nombre es incorrecto.";
         }
@@ -48,18 +82,37 @@ con opción a introducir texto) -->
             $link = $link."estudios=".$estudios."&";
 
         }
-        if(isset($hobbies)){
-            if(count($hobbies) > 0){
-                foreach ($hobbies as $hobbie) {
-                    echo "Hobbies/s: ". $hobbie. "<br>";
-                }
-            }
+
+        if (!validacionSelect($trabajo)) {
+            $errores[] = "El campo de situación laboral es incorrecto";
         }
         else{
-            $link = $link."hobbies=".$hobbies."&";
+            foreach ($trabajo as $trabajos) {
+                $link = $link."trabajo=".$trabajos."&";
+
+            }
 
         }
+        /* IMPORTANTE!!!!
+        Cuando tratemos con checkbox o selects multiples tendremos que tratarlos
+        como arrays y hacer una funcion para cada caso: ver: function validarCheckboxes
+        si falla hacemos lo mismo para todos, introducirlo en el array de errores
+        sino,iteramos con un foreach e introduciremos en la url todo lo que hayamos
+        seleccionado tanto en los checkbox como en los select */
 
+        if (!validarCheckboxes($hobbies)) {
+            // Checkbox is checked
+            $errores[] = "El campo de hobbies es incorrecto";
+      
+        } 
+        else {
+            foreach ($hobbies as $hobbie) {
+                $link = $link."hobbie=".$hobbie."&";
+            }        
+             // No checkbox is checked
+
+        }
+        
         if(!validaRequerido($texto)){
             $errores[] = "El campo texto es incorrecto";
 
@@ -74,9 +127,7 @@ con opción a introducir texto) -->
             header("Location: ejercicio23_procesa.php?".$link);
             exit;
         }
-    
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -114,10 +165,10 @@ con opción a introducir texto) -->
             </select>
             <br><br>
             Situación laboral:<select multiple name="trabajo[]" >
-                    <option value="estudiando" name="trabajo[]">Estudiando</option>
-                    <option value="trabajando" name="trabajo[]">Trabajando</option>
-                    <option value="buscando empleo" name="trabajo[]">Buscando empleo</option>
-                    <option value="desempleado" name="trabajo[]">Desempleado</option>
+                    <option value="estudiando">Estudiando</option>
+                    <option value="trabajando">Trabajando</option>
+                    <option value="buscando empleo">Buscando empleo</option>
+                    <option value="desempleado">Desempleado</option>
                 </select>
         </fieldset>
         <br>

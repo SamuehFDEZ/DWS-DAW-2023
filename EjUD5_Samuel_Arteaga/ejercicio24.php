@@ -17,7 +17,7 @@ Debe tener los botones de Enviar y Borrar -->
     <title>Document</title>
 </head>
 <body>
-    <form action="ejercicio24_procesa.php" method="post">
+    <form action="ejercicio24.php" method="get">
         <fieldset>
             <legend>Datos Personales</legend>
 
