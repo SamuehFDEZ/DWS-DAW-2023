@@ -33,4 +33,9 @@
         }
     }
 
+    function validarCheckboxes($valor) {
+        // Verifica si el parámetro está definido y no está vacío
+          return is_array($valor) && count($valor) > 0;
+       }
+
 ?>

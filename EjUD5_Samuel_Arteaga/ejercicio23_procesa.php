@@ -1,7 +1,7 @@
 <?php 
 
-        $nombre = $_REQUEST["nombre"];
-        $apellidos = $_REQUEST["apellidos"];
+        $nombre = $_GET["nombre"];
+        $apellidos = $_GET["apellidos"];
 
         echo "Nombre: ". $nombre. "<br>";
 
@@ -11,21 +11,11 @@
 
         $trabajo = $_GET["trabajo"];
 
-        foreach ($trabajo as $trabajos) {
-                echo "Situación laboral: $trabajos <br>";
-        }
+        echo "Situación laboral: $trabajo <br>";
 
-        $hobbies = $_GET["hobbies"];
+        $hobbie = $_GET["hobbies"];
 
-        foreach ($hobbies as $hobbie) {
-                echo "Hobbies: ". $hobbie. "<br>";
-        }
-
-        $texto = $_GET["texto"];
-
-        echo "Notaciones: $texto <br>";
-       
-
+        echo "Hobbies: ". $hobbie. "<br>";
         
-    
+       
 ?>
