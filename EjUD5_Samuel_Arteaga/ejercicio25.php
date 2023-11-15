@@ -13,9 +13,8 @@ grupo de clase.-->
 
 <?php
 // Declaramos enviar
-$enviar = $_POST["enviar"];
 // Si ha sido accionado
-if ($enviar == "enviar") {
+if (isset($_POST["enviar"])) {
     $redirect=true;
     // Declaramos el tipo de imagen permitido
     $allowed_image_extension = array(

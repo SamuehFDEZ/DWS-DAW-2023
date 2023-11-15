@@ -7,7 +7,7 @@ la información introducida por el usuario si no hay errores errores. Los datos 
 personales, nivel de estudios (desplegable), situación actual (selección múltiple: estudiando,
 trabajando, buscando empleo, desempleado) y hobbies (marcar de varios mostrados y poner otro
 con opción a introducir texto) */
-    require("ejercicio23_valida.php");
+    require "ejercicio23_valida.php";
   
     //Guarda los valores de los campos en variables, siempre y cuando se haya enviado el formulario, si no guardará NULL
     $nombre = isset($_POST["nombre"]) ? $_POST["nombre"] : null;
@@ -15,9 +15,9 @@ con opción a introducir texto) */
     $estudios = isset($_POST["estudios"]) ? $_POST["estudios"] : null;
     $trabajo = isset($_POST["trabajo"]) ? $_POST["trabajo"] : [];
     $hobbies = isset($_POST["hobbies"]) ? $_POST["hobbies"] : [];
-    $otro = isset($_POST["otro"]) ? $_POST["otro"] : "";
+    $otro = isset($_POST["otro"]) ? $_POST["otro"] : null;
     $errores = array(); 
-       
+
     if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         if (!validaRequerido($nombre)) { //Valida que el campo nombre no esté vacío.
@@ -35,7 +35,7 @@ con opción a introducir texto) */
         }
         $arrayEstudios = ["primaria","secundaria","bachillerato","fp"];
 
-        if (!in_array($estudios, $arrayEstudios) ) {
+        if (!in_array($estudios, $arrayEstudios)) {
             $errores[] = "El campo estudios es incorrecto";
         }
         else{
@@ -67,7 +67,7 @@ con opción a introducir texto) */
             $link = $link."hobbie=". implode(", ", $hobbies). "&";
             $link = $link."otro=". $otro;
         }
-
+        
         //Verifica si ha encontrado errores y de no haber redirige a la página con el mensaje de que pasó la validación.
         if(!$errores){
             header("Location: ejercicio23_procesa.php?".$link);
@@ -126,7 +126,7 @@ con opción a introducir texto) */
             Ajedrez<input type="checkbox" name="hobbies[]" value="ajedrez"<?php echo in_array("ajedrez", $hobbies) ? "selected" : ""?>><br><br>
             Ver series<input type="checkbox" name="hobbies[]" value="ver series"<?php echo in_array("ver series", $hobbies) ? "selected" : ""?>> <br><br>
             Otro:<input type="checkbox" name="hobbies[]" value="otro"<?php echo in_array("otro", $hobbies) ? "selected" : ""?>>
-            <input type="text" name="otro" <?php echo $otro;?>>&nbsp;<br><br>
+            <input type="text" name="otro" <?php echo $otro;?> >&nbsp;<br><br>
             <br><br>
         </fieldset>
         <br>
