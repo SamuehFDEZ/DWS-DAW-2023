@@ -18,7 +18,7 @@ indicando el campo en cursiva y el contenido en negrita */
 <body>
     <h1>Samuel Arteaga - Formulario de registro 4</h1>
 
-    <form action="SamuelForm4OK.php" method="post"><!-- en el form ponemos en el action el php a recibir, el metodo get  -->
+    <form action="SamuelForm4OK.php" method="post"><!-- en el form ponemos en el action el php a recibir, el metodo post  -->
        
 
     <fieldset>

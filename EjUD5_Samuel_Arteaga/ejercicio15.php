@@ -17,7 +17,7 @@ indicando el campo en cursiva y el contenido en negrita */
 <body>
     <h1>Samuel Arteaga - Formulario de registro 3</h1>
 
-    <form action="SamuelForm3OK.php" method="post"><!-- en el form ponemos en el action el php a recibir, el metodo get  -->
+    <form action="SamuelForm3OK.php" method="post"><!-- en el form ponemos en el action el php a recibir, el metodo post  -->
         <label for="nombre">Nombre:</label> <!-- en los labels ponemos a que input esta dedicado  -->
         <input type="text" name="nombre" maxlength="50"><br><br> <!-- en los input ponemos su tipo y el nombre a identificarlo, ademas de su maximo de caracteres -->
         

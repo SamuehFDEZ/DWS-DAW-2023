@@ -1,35 +1,43 @@
 <?php
 /**
+ * Ejercicio 23: Dado un vector asociativo de trabajadores con su salario,
+ * crea usando funciones y a criterio del usuario, el salario máximo, el salario mínimo
+ * y el salario medio. (puede elegir uno de ellos, varios o todos)
+ *
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  */
-/**CORREGIR */
 
 if (isset($_GET["enviar"])) {
-    // Get the input values as strings
+    // Obtén los valores del formulario
     $trabajadores = $_GET["trabajadores"];
-    $salario = $_GET["salario"];
+    $salarios = $_GET["salario"];
 
-    //con explode dividimos el contenido del input
-    //
+    // Divide los valores en arrays usando explode
     $trabajadoresArray = explode(",", $trabajadores);
-    $salariosArray = explode(",", $salario);
+    $salariosArray = explode(",", $salarios);
 
-    // crea un array asociativo donde los trabajadores son el indice y los salarios el valor
-    /**Por ejemplo
-     * 
-     * array(
-     *  "Samuel" => 1200
-     *  "Carlos" => 2000
-     * )
-     * 
-     * 
-     */
-    $trabajadores = array_combine($trabajadoresArray, $salariosArray);
+    // Crea un array asociativo con los trabajadores y sus salarios
+    $trabajadoresSalarios = array_combine($trabajadoresArray, $salariosArray);
 
-    $salarioMaximo = max($salariosArray);
-    $salarioMinimo = min($salariosArray);
-    $salarioMedio = array_sum($salariosArray) / count($salariosArray);
+    // Funciones para calcular el salario máximo, mínimo y medio
+    function salarioMaximo($arraySalarios){
+        return max($arraySalarios);
+    }
 
+    function salarioMinimo($arraySalarios){
+        return min($arraySalarios);
+    }
+
+    function salarioMedio($arraySalarios){
+        return array_sum($arraySalarios) / count($arraySalarios);
+    }
+
+    // Calcular los resultados
+    $salarioMaximo = salarioMaximo($salariosArray);
+    $salarioMinimo = salarioMinimo($salariosArray);
+    $salarioMedio = salarioMedio($salariosArray);
+
+    // Mostrar los resultados
     echo "Salario máximo: $salarioMaximo" . "<br>";
     echo "Salario mínimo: $salarioMinimo" . "<br>";
     echo "Salario medio: $salarioMedio" . "<br>";
@@ -37,7 +45,7 @@ if (isset($_GET["enviar"])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,7 +57,7 @@ if (isset($_GET["enviar"])) {
         <input type="text" name="trabajadores"><br><br>
         <label for="salario">Introduce el salario de los trabajadores (separados por coma):</label><br><br>
         <input type="text" name="salario"><br><br>
-        <input type="submit" name="enviar" value="Enviar"><br><br>
+        <input type="submit" name="enviar" value="Calcular"><br><br>
     </form>
 </body>
 </html>
