@@ -2,6 +2,7 @@
 /**
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  */
+/**CORREGIR */
 
 if (isset($_GET["enviar"])) {
     // Get the input values as strings
