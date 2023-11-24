@@ -213,7 +213,7 @@ validar($expresionl, $cadena2l);
 
 $cadena1m = "1-2;A:S'Á'aá";
 $cadena2m = "dsadasda";
-$expresionm = '/^[\d\s\'",;.:-]+$/';
+$expresionm = '/^[\d\s\'",;.:-A-Za-záéíóúÁÉÍÓÚ]+$/u';
 
 echo "\n";
 
@@ -244,9 +244,9 @@ validar($expresionn, $cadena2n);
 // o) Genera el patrón para validar una URL sencilla (http://www.ieslasenia.org/ejercicio?16)
 
 
-$cadena1o = "http://www.ieslasenia.org/ejercicio?16";
+$cadena1o = "https://www.ieslasenia.org/ejercicio?16";
 $cadena2o = "htt://www.ieslasenia.org/ejercicio?16";
-$expresiono = "/^(http?|ftp):\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9%_.~-]*)*$/";
+$expresiono = "/^(http|https|ftp):\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}([\/a-zA-Z0-9%_.~-]*)*$/";
 
 echo "\n";
 
@@ -287,9 +287,9 @@ validar($expresionq, $cadena2q);
 
 // r) Genera el patrón para validar una MAC separada por :
 
-$cadena1r = "12ASÁaá";
+$cadena1r = "00:1B:44:11:3A:B7";
 $cadena2r = "";
-$expresionr = "";
+$expresionr = "/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/";
 
 echo "\n";
 
@@ -300,35 +300,34 @@ echo "\n";
 validar($expresionr, $cadena1r);
 validar($expresionr, $cadena2r);
 
-// // s) Genera el patrón para validar una MAC separada por -
+// s) Genera el patrón para validar una MAC separada por -
 
-// $cadena1s = "12ASÁaá";
-// $cadena2s = "";
-// $expresions = "";
+$cadena1s = "00-1B-44-11-3A-B7";
+$cadena2s = "";
+$expresions = "/^([0-9A-Fa-f]{2}[--]){5}([0-9A-Fa-f]{2})$/";
 
-// echo "\n";
+echo "\n";
 
-// echo "MAC separada por -\n";
+echo "MAC separada por -\n";
 
-// echo "\n";
+echo "\n";
 
-// validar($expresions, $cadena1s);
-// validar($expresions, $cadena2s);
+validar($expresions, $cadena1s);
+validar($expresions, $cadena2s);
 
-// // t) Genera el patrón para validar una matrícula de vehículo española
+// t) Genera el patrón para validar una matrícula de vehículo española
 
+$cadena1t = "6795HFP";
+$cadena2t = "AB1234";
+$expresiont = "/^[0-9]{4}[BCDFGHJKLMNPRSTVWXYZ]{3}$/";
 
-// $cadena1t = "12ASÁaá";
-// $cadenat = "";
-// $expresiont = "";
+echo "\n";
 
-// echo "\n";
+echo "Matrícula de vehículo española\n";
 
-// echo "MAC separada por -\n";
+echo "\n";
 
-// echo "\n";
-
-// validar($expresiont, $cadena1t);
-// validar($expresiont, $cadena2t);
+validar($expresiont, $cadena1t);
+validar($expresiont, $cadena2t);
 
 ?>
