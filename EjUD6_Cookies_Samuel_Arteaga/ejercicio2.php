@@ -15,27 +15,45 @@ if (isset($_POST["enviar"])) {
     $cookie_name = "miCookie";
 
     $nombre = $_POST["nombre"];
-    $cookie_saludate = $_POST["saludoDespedida"];
 
-    echo "$nombre <br>";
-    if ($saludoDespedida == "Saludo") {
-        echo "Has seleccionado Saludo <br>";
-    } else {
-        echo "Has seleccionado Despedida <br>";
+    echo "Nombre: $nombre <br>";
+    
+    $idioma = $_POST["idioma"];
+
+    switch ($idioma) {
+        case "Español":
+           echo "Has seleccionado el idioma Español <br>";
+            break;
+        case "Inglés":
+            echo "Has seleccionado el idioma Inglés <br>";
+            break;
+        case "Valenciano":
+            echo "Has seleccionado el idioma Valenciano <br>";
+            break;
+        default:
+           echo "ERROR!";
+            break;
     }
 
-    $color = $_POST["red"];
 
-    echo "El color es:". $color;
+    $color = $_POST["color"];
 
-    // $cookie_value = $nombre. " ".$cookie_saludate;
+    echo "El color es: $color <br>";
 
-    // setcookie($cookie_name, $cookie_value);
+    $ciudad = $_POST["ciudad"];
+
+    echo "La ciudad seleccionada es: $ciudad <br>";
+
+
+    $cookie_value = $nombre. ", ".$idioma. ", ". $color. ", ". $ciudad;
+
+    setcookie($cookie_name, $cookie_value);
 }
+
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,18 +70,29 @@ if (isset($_POST["enviar"])) {
         <input type="radio" name="idioma" value="Valenciano">Valenciano<br><br>
 
         <label for="color">Selecciona tu color favorito</label><br><br>
-        <input type="color" name="red[]" multiple><br><br>
+        <select name="color">
+            <option value="rojo">Rojo</option>
+            <option value="amarillo">Amarillo</option>
+            <option value="verde">Verde</option>
+            <option value="azul">Azul</option>
+        </select><br><br>
 
+        <label for="ciudad">Selecciona tu ciudad favorita</label><br><br>
+        <select name="ciudad">
+            <option value="Valencia">Valencia</option>
+            <option value="Alicante">Alicante</option>
+            <option value="Castellón">Castellón</option>
+        </select><br><br>
 
         <input type="submit" name="enviar" value="Enviar"><br><br>
         <?php
-        // if (!isset($_COOKIE[$cookie_name])) {
-        //     echo "El nombre de la cookie " . $cookie_name . " no está definida!";
-        // } 
-        // else {
-        //     echo "Cookie " .  $cookie_name . " está definida!<br>";
-        //     echo "La forma de Saludo/Despedida es: " . $_COOKIE[$cookie_name];
-        // }
+            if (!isset($_COOKIE[$cookie_name])) {
+                echo "El nombre de la cookie " . $cookie_name . " no está definida!";
+            } 
+            else {
+                echo "Cookie " .  $cookie_name . " está definida!<br>";
+                echo "Los valores de la cookie son: " . $_COOKIE[$cookie_name];
+            }
         ?>
     </form>
 </body>
