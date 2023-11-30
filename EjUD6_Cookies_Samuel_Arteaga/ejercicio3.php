@@ -49,6 +49,7 @@ if (isset($_POST["enviar"])) {
     
     
     $cookie_value = $num1. ", ".$num2. ", ". implode(", ", $operaciones);  
+    /**Creamos la cookie con los valores de nombre y value */
 
     setcookie($cookie_name, $cookie_value);
 }
@@ -80,6 +81,9 @@ if (isset($_POST["enviar"])) {
 
         <input type="submit" name="enviar" value="Enviar"><br><br>
         <?php
+        /**Con este php embebido en html damos lugar con un if si se ha establecido o no, si lo ha hecho
+         * imprimimos todos los valores
+         */
             if (!isset($_COOKIE[$cookie_name])) {
                 echo "El nombre de la cookie " . $cookie_name . " no está definida!";
             } 

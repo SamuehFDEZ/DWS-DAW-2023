@@ -30,6 +30,7 @@ if (isset($_POST["boton"])) {
 
 
     $cookie_value = $euros. ", ".$conversor;  
+    /**Creamos la cookie con los valores de nombre y value */
 
     setcookie($cookie_name, $cookie_value);
 }
@@ -57,6 +58,9 @@ if (isset($_POST["boton"])) {
 
         <input type="submit" name="boton" value="calcular"><br><br>
         <?php
+        /**Con este php embebido en html damos lugar con un if si se ha establecido o no, si lo ha hecho
+         * imprimimos todos los valores
+         */
             if (!isset($_COOKIE[$cookie_name])) {
                 echo "El nombre de la cookie " . $cookie_name . " no está definida!";
             } 
