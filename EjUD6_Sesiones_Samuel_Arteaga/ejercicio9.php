@@ -53,12 +53,12 @@ if (isset($_POST["enviar"])) {
         date_default_timezone_set($identificadorZonaHoraria);
 
         //la hora actual
-        $horaActual = date('H:i:s');
+        $horaAntesCambio = date('H:i:s');
 
-        $_SESSION["horaActual"] = $horaActual;
+        $_SESSION["horaActual"] = $horaAntesCambio;
 
         // Mostrar la hora actual
-        echo "La hora actual en la zona horaria {$zonaHoraria} es: {$horaActual} <br>";
+        echo "La hora actual en la zona horaria {$zonaHoraria} es: {$horaAntesCambio} <br>";
     } else {
         echo "Zona horaria no válida. <br>";
     }
@@ -66,7 +66,7 @@ if (isset($_POST["enviar"])) {
         
     if (empty($_SESSION["zonaHoraria"]) && empty($_SESSION["horaActual"])) {
         $_SESSION["zonaHoraria"] = $_POST["zonaHoraria"];
-        $_SESSION["horaActual"] = $_POST["horaActual"];
+        $_SESSION["horaActual"] = $horaAntesCambio;
 
     } 
     else {
@@ -74,7 +74,7 @@ if (isset($_POST["enviar"])) {
         $_SESSION["zonaHoraria"] = $_POST["zonaHoraria"];
 
         $_SESSION["horaActualAntiguo"]  = $_SESSION["horaActual"];
-        $_SESSION["horaActual"] = $_POST["horaActual"];
+        $_SESSION["horaActual"] = $horaAntesCambio;
 
         echo "Los datos anteriormente introducidos son: ", $_SESSION["zonaHorariaAntiguo"]," ", $_SESSION["horaActualAntiguo"]. "<br>";
     }
