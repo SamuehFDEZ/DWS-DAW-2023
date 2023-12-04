@@ -105,10 +105,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $_SESSION["otroAntiguo"]  = $_SESSION["otro"];
             $_SESSION["otro"] = $_POST["otro"];
-
-            echo "Los datos anteriormente introducidos son: ", $_SESSION["nombreAntiguo"], ", ", $_SESSION["apellidosAntiguo"], ", ",
-            $_SESSION["estudiosAntiguo"], ", ", $_SESSION["trabajoAntiguo"], ", ", implode(", ",$_SESSION["hobbiesAntiguo"]) , ", ",$_SESSION["otroAntiguo"]  . "<br>";
         }
+    }
+    if(isset($_POST["enviar"])){
+        header("Location: ejercicio11_valida.php");
     }
 }
 ?>

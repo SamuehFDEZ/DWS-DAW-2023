@@ -118,15 +118,13 @@ session_start(); //iniciamos la sesión
                 $_SESSION["otroAntiguo"]  = $_SESSION["otro"];
                 $_SESSION["otro"] = $_POST["otro"];
     
-                echo "Los datos anteriormente introducidos son: ", $_SESSION["nombreAntiguo"], ", ", $_SESSION["apellidosAntiguo"], ", ",
-                $_SESSION["edadAntiguo"]
-                , ", ", $_SESSION["pesoAntiguo"]
-                , ", ", $_SESSION["sexoAntiguo"]
-                , ", ",$_SESSION["estadoCivilAntiguo"] 
-                , ", ",implode(", ",$_SESSION["aficionesAntiguo"]), ", ",$_SESSION["otroAntiguo"]  . "<br>";
+               
             }
 
 
+        }
+        if(isset($_POST["enviar"])){
+            header("Location: ejercicio12_valida.php");
         }
     }
 ?>

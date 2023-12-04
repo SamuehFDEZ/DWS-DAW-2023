@@ -6,7 +6,8 @@ url para enviarlos (de la foto sólo enviaremos nombre, extensión, ruta y tama�
 -->
 
 <?php
-// Declaramos enviar
+    session_start(); //iniciamos la sesión
+    // Declaramos enviar
 // Si ha sido accionado
 if (isset($_POST["enviar"])) {
     $redirect=true;
@@ -17,7 +18,7 @@ if (isset($_POST["enviar"])) {
         "gif"
     );
     // La extension del archivo
-    $file_extension = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
+   
     // Si la extensión del archivo no coincide mostramos un mensaje de error
     if (!in_array($file_extension, $allowed_image_extension)) {
         echo '<p style="color:red;">El tipo de fichero es invalido</br><p>';
@@ -33,6 +34,15 @@ if (isset($_POST["enviar"])) {
         $target = "image/" . basename($_FILES["foto"]["nombre"]).getdate()["year"].getdate()["mon"].getdate()["mday"].getdate()["hours"].getdate()["minutes"].getdate()["seconds"];
         move_uploaded_file($_FILES["foto"]["tmp_name"], $target);
     }
+    $file_extension = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
+
+    $_SESSION["foto"] = array(
+        "nombre" =>  $_FILES["foto"]["name"],
+        "Tamanyo" =>  $_FILES["foto"]["size"],
+        "extension" =>  pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION),
+        "ruta" =>  $_FILES["foto"]["tmp_name"]. "kb"
+
+    );
 
     if (
         empty($_SESSION["nombre"]) && empty($_SESSION["apellidos"]) && empty($_SESSION["password"])
@@ -64,16 +74,10 @@ if (isset($_POST["enviar"])) {
 
         $_SESSION["emailAntiguo"]  = $_SESSION["email"];
         $_SESSION["email"] = $_POST["email"];
-
-        echo "Los datos anteriormente introducidos son: ", $_SESSION["nombreAntiguo"], ", ", $_SESSION["apellidosAntiguo"], ", ",
-        $_SESSION["passwordAntiguo"]
-        , ", ", $_SESSION["estudiosAntiguo"]
-        , ", ", $_SESSION["civilAntiguo"]
-        , ", ",$_SESSION["emailAntiguo"] 
-        . "<br>";
     }
 
-
+    //header("Location: ejercicio13_valida.php");
+    
 }
 ?>
 
@@ -112,7 +116,7 @@ if (isset($_POST["enviar"])) {
             <option value="Alemán">Alemán</option>
             <option value="Italiano">Italiano</option>
         </select>
-        <label for="apellido">Email: </label><input type="email" name="email" required>
+        <label for="email">Email: </label><input type="email" name="email" required>
         <input type="file" name="foto" id="foto" required>
         <br>
         <input type="submit" name="enviar" id="enviar" value="enviar">Enviar</input>
