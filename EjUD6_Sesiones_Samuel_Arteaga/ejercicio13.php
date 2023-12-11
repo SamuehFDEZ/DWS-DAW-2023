@@ -1,4 +1,3 @@
-
 <!-- @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
 
 13. Aplica la sesión en el ejercicio 25 de la UD5 para poder pasar los datos en lugar de construir la
@@ -6,11 +5,11 @@ url para enviarlos (de la foto sólo enviaremos nombre, extensión, ruta y tama�
 -->
 
 <?php
-    session_start(); //iniciamos la sesión
-    // Declaramos enviar
+session_start(); //iniciamos la sesión
+// Declaramos enviar
 // Si ha sido accionado
 if (isset($_POST["enviar"])) {
-    $redirect=true;
+    $redirect = true;
     // Declaramos el tipo de imagen permitido
     $allowed_image_extension = array(
         "png",
@@ -18,35 +17,41 @@ if (isset($_POST["enviar"])) {
         "gif"
     );
     // La extension del archivo
-   
-    // Si la extensión del archivo no coincide mostramos un mensaje de error
-    if (!in_array($file_extension, $allowed_image_extension)) {
-        echo '<p style="color:red;">El tipo de fichero es invalido</br><p>';
-        $redirect=false;
-    }
-    // Si el archivo es más grande de lo que pedimos mostramos el error
-    if (($_FILES["foto"]["size"] > 1024*50)) {
-        echo '<p style="color:red;">El archivo es demasiado grande</br><p>';
-        $redirect=false;
-    }
-    //  Redireccionamos la imagen
-    if ($redirect){
-        $target = "image/" . basename($_FILES["foto"]["nombre"]).getdate()["year"].getdate()["mon"].getdate()["mday"].getdate()["hours"].getdate()["minutes"].getdate()["seconds"];
-        move_uploaded_file($_FILES["foto"]["tmp_name"], $target);
-    }
     $file_extension = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
 
-    $_SESSION["foto"] = array(
-        "nombre" =>  $_FILES["foto"]["name"],
-        "Tamanyo" =>  $_FILES["foto"]["size"],
-        "extension" =>  pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION),
-        "ruta" =>  $_FILES["foto"]["tmp_name"]. "kb"
+    // Si el archivo es más grande de lo que pedimos mostramos el error
+    if (($_FILES["foto"]["size"] > 1024 * 50)) {
+        echo '<p style="color:red;">El archivo es demasiado grande</br><p>';
+        $redirect = false;
+    }
+        //Esto debería de ir en form24valida
+        if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
+            $nombreDirectorio = "image/";
 
-    );
+            // Obtener información sobre el archivo
+            $infoArchivo = pathinfo($_FILES['foto']['name']);
+                      
+            $tamanyofoto = $_FILES['foto']['size'];
+            // Verificar que el directorio de destino exista y sea escribible
+            if (is_dir($nombreDirectorio) && is_writable($nombreDirectorio)) {
+                $idUnico = time();
+                $nombreFichero = $infoArchivo['filename'] . '.' . $infoArchivo['extension'];
+                $nombreCompleto = $nombreDirectorio . $nombreFichero;
+    
+                move_uploaded_file($_FILES['foto']['tmp_name'], $nombreCompleto);
+    
+                $_SESSION['foto'] = array(
+                    'nombre' => "Nombre: ", $infoArchivo['filename'],"<br>",
+                    'extension' => "Extensión: ", $infoArchivo['extension'],"<br>",
+                    'ruta' => "Ruta: ", $nombreDirectorio,"<br>",
+                    'size' => "Tamaño: ", $_FILES['foto']['size']."kb"
+                );
+            } 
+        } 
 
     if (
         empty($_SESSION["nombre"]) && empty($_SESSION["apellidos"]) && empty($_SESSION["password"])
-        && empty($_SESSION["estudios"]) && empty($_SESSION["civil"]) && empty($_SESSION["email"]) 
+        && empty($_SESSION["estudios"]) && empty($_SESSION["civil"]) && empty($_SESSION["email"])
     ) {
         $_SESSION["nombre"] = $_POST["nombre"];
         $_SESSION["apellidos"] = $_POST["apellidos"];
@@ -54,8 +59,6 @@ if (isset($_POST["enviar"])) {
         $_SESSION["estudios"] = $_POST["estudios"];
         $_SESSION["civil"] = $_POST["civil"];
         $_SESSION["email"] = $_POST["email"];
-       
-
     } else {
         $_SESSION["nombreAntiguo"]  = $_SESSION["nombre"];
         $_SESSION["nombre"] = $_POST["nombre"];
@@ -75,21 +78,22 @@ if (isset($_POST["enviar"])) {
         $_SESSION["emailAntiguo"]  = $_SESSION["email"];
         $_SESSION["email"] = $_POST["email"];
     }
-
-    //header("Location: ejercicio13_valida.php");
     
+    header("Location: ejercicio13_valida.php");
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samuel Arteaga</title>
 </head>
+
 <body>
-<form action="ejercicio13.php" method="post">
+    <form action="ejercicio13.php" method="post" enctype="multipart/form-data">
         <label for="nombre">Indique su Nombre: </label><input type="text" name="nombre" required>
         <br>
         <label for="apellido">Indique sus Apellidos: </label><input type="text" name="apellidos" required>
@@ -124,4 +128,5 @@ if (isset($_POST["enviar"])) {
 
     </form>
 </body>
+
 </html>

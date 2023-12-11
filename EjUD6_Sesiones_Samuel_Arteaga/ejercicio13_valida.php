@@ -1,9 +1,8 @@
 <?php 
 
-    session_start(); //iniciamos la sesión
+     session_start(); //iniciamos la sesión
 
-   foreach ($_SESSION["foto"] as $key => $value) {
-        echo "El dato introducido es $key => $value";
+   foreach ($_SESSION["foto"] as $valor) {
+        echo "<b> $valor </b>";
    }
-
 ?>
