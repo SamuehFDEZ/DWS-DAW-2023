@@ -19,63 +19,34 @@ para poder realizar este ejercicio. */
 
 session_start();
 
-function salarioMaximo($array){
-    return max($array);
-}
-
-function salarioMinimo($array){
-    return min($array);
-}
-
-function salarioMedio($array){
-    return array_sum($array) / count($array);
-}
+$_SESSION["nombre"] = $_POST["nombre"];
+$_SESSION["apellidos"] = $_POST["apellidos"];
+$_SESSION["asignatura"] = $_POST["asignatura"];
+$_SESSION["edad"] = $_POST["edad"];
+$_SESSION["grupo"] = $_POST["grupo"];
+$_SESSION["cargo"] = $_POST["cargo"];
 
 
 if (isset($_POST["Acceder"])) {
-    // Obtén los valores del formulario
+
     $nombre = $_POST["nombre"];
-    $rol = $_POST["rol"];
+    $apellidos = $_POST["apellidos"];
+    $asignatura = $_POST["asignatura"];
+    $edad = $_POST["edad"];
+    $grupo = $_POST["grupo"];
+    $cargo = $_POST["cargo"];
 
-
-    $_SESSION["nombre"] = $_POST["nombre"];
-    $_SESSION["rol"] = $_POST["rol"];
-    
-    $array = array(
-        "Samuel" => 1200,
-        "Adrian" => 1300,
-        "Ivan" => 1400,
-        "Alejandro" => 1500,
-        "Jose" => 1600,
-        "Lucas" => 1700,
-        "Sergio" => 1800
-    );
-
-    $_SESSION["array"] = $array;
-   
-
-    // Calcular los resultados
-    $salarioMaximo = salarioMaximo($array);
-    $salarioMinimo = salarioMinimo($array);
-    $salarioMedio = salarioMedio($array);
-
-    $_SESSION["salarioMaximo"] = $salarioMaximo;
-    $_SESSION["salarioMinimo"] = $salarioMinimo;
-    $_SESSION["salarioMedio"] = $salarioMedio;
-
- 
-    switch ($rol) {
-        case "Gerente":
-            header("Location: gerente.php");
-        break;
-
-        case "Sindicalista":
-            header("Location: sindicalista.php");
-        break;
-
-        case "Responsable":
-            header("Location: responsable.php");
-        break;
+    if($edad == "menor" && $cargo == "con"){
+        header("Location: delegado.php");
+    }
+    else if($edad == "menor" && $cargo == "sin"){
+        header("Location: estudiante.php");
+    }
+    else if($edad == "mayor" && $cargo == "sin"){
+        header("Location: profesor.php");
+    }
+    else if($edad == "mayor" && $cargo == "con"){
+        header("Location: director.php");
     }
 }
 
@@ -83,23 +54,34 @@ if (isset($_POST["Acceder"])) {
 
 <!DOCTYPE html>
 <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Samuel Arteaga</title>
+    </head>
+    <body>
+        <form action="ejercicio2.php" method="post">
+            <label for="nombre">Nombre:</label><br><br>
+            <input type="text" name="nombre" required><br><br>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samuel Arteaga</title>
-</head>
+            <label for="apellidos">Apellidos:</label><br><br>
+            <input type="text" name="apellidos" required><br><br>
 
-<body>
-    <form action="ejercicio1.php" method="post">
-        Nombre: <input type="text" name="nombre">
-        <p>
-            Gerente <input type="radio" name="rol" value="Gerente">
-            Sindicalista <input type="radio" name="rol" value="Sindicalista">
-            Responsable de Nóminas <input type="radio" name="rol" value="Responsable">
-        </p>
-        <input type="submit" name="Acceder" value="Acceder">
-    </form>
-</body>
+            <label for="asignatura">Asignatura:</label><br><br>
+            <input type="text" name="asignatura" required><br><br>
 
+            <label for="grupo">Grupo:</label><br><br>
+            <input type="text" name="grupo" required><br><br>
+
+            <label for="edad">Mayor de edad</label><br><br>
+            Si<input type="radio" name="edad" value="mayor" required>
+            No<input type="radio" name="edad" value="menor" required><br><br>
+
+            <label for="cargo">Cargo</label><br><br>
+            Si<input type="radio" name="cargo" value="con" required>
+            No<input type="radio" name="cargo" value="sin" required><br><br>
+
+            <input type="submit" name="Acceder" value="Acceder">
+        </form>
+    </body>
 </html>
