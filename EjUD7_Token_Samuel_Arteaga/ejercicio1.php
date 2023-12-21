@@ -11,7 +11,11 @@ avisando en caso de que el token no coincida. Puedes añadir un botón cambiar S
 generará un nuevo token en la sesión y así comprobar que detecta si la SID no coincide. */
 
 session_start();
-$_SESSION["token"] = bin2hex(openssl_random_pseudo_bytes(24));
+
+if(!isset($_SESSION["token"])){
+    $_SESSION["token"] = bin2hex(openssl_random_pseudo_bytes(24));
+}   
+
 function salarioMaximo($array){
     return max($array);
 }
@@ -33,6 +37,7 @@ if (isset($_POST["Acceder"])) {
 
     $_SESSION["nombre"] = $_POST["nombre"];
     $_SESSION["rol"] = $_POST["rol"];
+    $_SESSION["hidden"] = $_POST["token"];
 
     $array = array(
         "Samuel" => 1200,
@@ -71,18 +76,18 @@ if (isset($_POST["Acceder"])) {
             break;
     }
 
-    if (!isset($_POST['token'])) {
-        print('No se ha encontrado token!');
+    if (!isset($_POST["token"])) {
+        print("No se ha encontrado token!");
     } 
     else {
         //Si existe, debemos comprobar que el token recibido en $_POST es
         //el que hemos almacenado en la variable de la sesión $_SESSION
-        if (hash_equals($_POST['token'], $_SESSION['token']) === false) {
-            print('El token no coincide!');
+        if (hash_equals($_POST["token"], $_SESSION["token"]) === false) {
+            print("El token no coincide!");
         } 
         else {
             //El token es correcto y continúa el procesamiento con seguridad
-            print('El token es correcto y podemos ejecutar acciones');
+            print("El token es correcto y podemos ejecutar acciones");
         }
     }
 }
@@ -98,8 +103,8 @@ if (isset($_POST["Acceder"])) {
     </head>
 
     <body>
-        <form action="ejercicio1.php" method="post">
-            <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+        <form method="post">
+            <input type="hidden" name="token" value="<?php echo $_SESSION["token"]; ?>">
             Nombre: <input type="text" name="nombre">
             <p>
                 Gerente <input type="radio" name="rol" value="Gerente">
