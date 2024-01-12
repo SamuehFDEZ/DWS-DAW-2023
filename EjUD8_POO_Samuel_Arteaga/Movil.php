@@ -1,61 +1,37 @@
 <?php 
-
     include "Terminal.php";
 
-    class Movil extends Terminal{
-        private $numeroMovil;
+    class Movil extends Terminal {
         private $tarifa;
-        private $minutos = 0;
-        private $segundos = 0;
-        private $euros = 0;
 
-        public function getNumeroMovil(){
-            return $this->numeroMovil;
-        }
-
-        public function setNumeroMovil($numeroMovil){
-            $this->numeroMovil = $numeroMovil;
-        }
-        
-        public function getTarifa(){
-            return $this->tarifa;
-        }
-
-        public function setTarifa($tarifa){
+        public function __construct($id, $tarifa) {
+            parent::__construct($id);
             $this->tarifa = $tarifa;
+            $this->setSegundos(0); 
         }
 
-        public function getMinutos(){
-            return $this->minutos;
+        public function getCoste() {
+            $coste = 0;
+            switch ($this->tarifa) {
+                case "rata":
+                    $coste = 0.06;
+                    break;
+                case "mono":
+                    $coste = 0.12;
+                    break;
+                case "bisonte":
+                    $coste = 0.3;
+                    break;
+                default:
+                    echo "error!";
+            }
+    
+            $costeTotal = $coste * ($this->getSegundos() / 60);
+            $this->setTiempoTarificado($costeTotal * 60); // Convert cost back to seconds for tarification time
+            return number_format($costeTotal, 2) . " euros";
         }
-
-        public function setMinutos($minutos){
-            $this->minutos = $minutos;
-        }
-
-        public function getSegundos(){
-            return $this->segundos;
-        }
-
-        public function setSegundos($segundos){
-            $this->segundos = $segundos;
-        }
-
-        public function getEuros(){
-            return $this->euros;
-        }
-
-        public function setEuros($euros){
-            $this->euros = $euros;
-        }
-
-        public function __construct($numeroMovil, $tarifa) {
-            $this->numeroMovil = $numeroMovil;
-            $this->tarifa = $tarifa;
-        }
-
-        public function __toString(){
-            return "Nº ". $this->numeroMovil ." - ".$this->minutos." m y ". $this->segundos." s de conversación en total - tarificados". $this->minutos ." m y ". $this->segundos ."s por un importe de ". $this->euros ." euros \n";
+        public function __toString() {
+            return parent::__toString() . " - tarificados " . $this->getTiempoConversacion() . " por un importe de " . $this->getCoste() . "<br>\n";
         }
     }
 ?>

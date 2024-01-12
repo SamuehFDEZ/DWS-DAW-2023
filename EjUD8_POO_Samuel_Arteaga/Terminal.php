@@ -1,40 +1,57 @@
 <?php
-    class Terminal{
-    /*subclase de Terminal (con atributos número y tiempo de
-    conversación y el método llama($terminal,$segundosDeLlamada) donde se pasa el terminal al
-    que se llama y se debe actualizar el tiempo de conversación para el terminal que llama y el
-    llamado). Cada móvil lleva asociada una tarifa que puede ser “rata”, “mono” o “bisonte”. El
-    coste por minuto es de 6, 12 y 30 céntimos respectivamente. Se tarifican los segundos exactos.
-    Obviamente, cuando un móvil llama a otro, se le cobra al que llama, no al que recibe la llamada.
-    A continuación, se proporciona el contenido del main y el resultado que debe aparecer por
-    pantalla. */
+   class Terminal {
+    private $numero;
+    private $tiempoConversacion;
+    private $segundos;
 
-        private $numero;
-        private $tiempoConversacion;
+    private $tiempoTarificado;
 
-        public function getNumero(){
-            return $this->numero;
-        }
-
-        public function setNumero($numero){
-            $this->$numero = $numero;
-        }
-
-        public function getTiempoConversacion(){
-            return $this->tiempoConversacion;
-        }
-
-        public function setTiempoConversacion($tiempoConversacion){
-            $this->tiempoConversacion = $tiempoConversacion;
-        }
-
-        public function llama($objeto, $segundosDeLlamada){
-            $this->$objeto = $objeto;
-            $this->$segundosDeLlamada = round($segundosDeLlamada/60);
-        }
-
-        public function __construct(){
-            
-        }
+    public function __construct($id) {
+        $this->numero = $id;
     }
+
+    public function getId() {
+        return $this->numero;
+    }
+
+    public function getSegundos() {
+        return $this->segundos;
+    }
+
+    public function setSegundos($segundos) {
+        $this->segundos = $segundos;
+    }
+
+    public function getTiempoConversacion() {
+        $minutos=number_format($this->tiempoConversacion/60,0);
+        $segundos= $this->tiempoConversacion % 60;
+        $tiempo = $minutos ."m y ". $segundos ."s ";
+        return $tiempo;
+    }
+
+    public function setTiempoConversacion($tiempoConversacion) {
+        $this->tiempoConversacion = $tiempoConversacion;
+    }
+
+    public function getTiempoTarificado() {
+        $minutos = number_format($this->tiempoTarificado / 60, 0);
+        $segundos = $this->tiempoTarificado % 60;
+        return $minutos . "m y " . $segundos . "s ";
+    }
+
+    public function setTiempoTarificado($tiempoTarificado) {
+        $this->tiempoTarificado = $tiempoTarificado;
+    }
+
+    public function llama($objeto, $segundosDeLlamada) {
+        $this->tiempoConversacion += $segundosDeLlamada;
+        $this->segundos += $segundosDeLlamada;
+        $objeto->setTiempoConversacion($objeto->getTiempoConversacion() + $segundosDeLlamada);
+    }
+
+    public function __toString() {
+        return "Nº " . $this->getId() . " - " . $this->getTiempoConversacion() . " de conversación en total - tarificados " . $this->getTiempoTarificado() . "por un importe de ";
+        
+    }
+}
 ?>
