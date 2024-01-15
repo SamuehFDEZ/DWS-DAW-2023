@@ -1,9 +1,10 @@
 <?php
 
 /**
- * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
+ * author Silvia Vilar
  * Ej3UD8 - mainVehiculos.php
  */
+include "Vehiculo.php";
 include "Bicicleta.php";
 include "Coche.php";
 $bicicleta = new Bicicleta();
@@ -16,10 +17,13 @@ do {
     echo "3. Poner cadena de la bicicleta<br>\n";
     echo "4. Avanza con el coche<br>\n";
     echo "5. Quema rueda con el coche<br>\n";
-    echo "6. LLenar depósito del coche<br>\n";
+    echo "6. Llenar depósito del coche<br>\n";
     echo "7. Ver kilometraje de la bicicleta<br>\n";
     echo "8. Ver kilometraje del coche<br>\n";
     echo "9. Ver kilometraje total<br>\n";
+    echo "10. Ver número de vehículos<br>\n";
+    echo "11. Añade una bicicleta<br>\n";
+    echo "12. Añade un coche<br>\n";
     echo "X. Salir<br>\n";
     echo "Elige una opción:<br>\n";
     $opcion = readline();
@@ -54,6 +58,17 @@ do {
             break;
         case '9': //ver kilometraje total
             echo Vehiculo::verKMTotales();
+            break;
+        case '10': //ver número de vehículos
+            echo Vehiculo::verVehiculosCreados();
+            break;
+        case '11': //añade una bicicleta
+            $nombrebici = readline("Introduce el nombre de la bicicleta: ");
+            $$nombrebici = new Bicicleta();
+            break;
+        case '12': //añade un coche
+            $nombrecoche = readline("Introduce el nombre del coche: ");
+            $$nombrecoche = new COche();
             break;
         case 'X':
             echo "Programa finalizado";

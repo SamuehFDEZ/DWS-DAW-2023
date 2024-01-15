@@ -1,28 +1,20 @@
-<?php 
+<?php
 
-class Bicicleta{
-
-    public function __construct(){
-
+class Bicicleta extends Vehiculo {
+    public function hacerCaballito() {
+        echo "¡Haciendo el caballito con la bicicleta! \n";
     }
 
-    public function avanza(){
-
+    public function ponerCadena() {
+        echo "Poniendo cadena a la bicicleta. \n";
     }
-
-    public function hacerCaballito(){
-
-    }
-
-    public function ponerCadena(){
-
-    }
-
-    public function verKMRecorridos(){
-
-    }
-
     
-}
 
-?>
+    public function verKMRecorridos() {
+        return "Kilómetros recorridos en bicicleta: {$this->kilometrosRecorridos} km \n";
+    }
+
+    public function __construct() {
+        parent::$vehiculosCreados++;
+    }
+}
