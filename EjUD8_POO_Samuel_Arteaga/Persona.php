@@ -1,19 +1,8 @@
 <?php 
 
-trait DNI {
-    public function generarDNI() {
-        $numeroDNI = mt_rand(10000000, 99999999); // Genera un número aleatorio de 8 cifras
-        $resto = $numeroDNI % 23;
-        $letra = $this->generaLetraDNI($resto);
-        return $numeroDNI . $letra;
-    }
-    public function generaLetraDNI($idLetra) {
-        $letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-        return $letras[$idLetra];
-    }
-}
+include "traitDNI.php";
 class Persona{
-    use DNI;
+    use traitDNI;
     public $nombre;
     public $edad;
     public $DNI;
@@ -61,7 +50,7 @@ class Persona{
     }
 
     public function setSexo($sexo) {
-        $this->sexo = $sexo;
+        $this->sexo = $this->comprobarSexo($sexo);
     }
     
     public function getAltura() {
@@ -105,26 +94,24 @@ class Persona{
     }
 
     public function comprobarSexo($sexo){
-        if($this->sexo == "H"){
+        if($sexo != "M" && $sexo != "H"){
+            return "H";
+        } 
+        else{
             return $sexo;
-        }
-        else if($this->sexo == "M"){
-            return $sexo;
-        }
-        else if($this->sexo != "M" && $this->sexo != "H"){
-            return $this->setSexo("H");
         }
     }
 
     public function calcularIMC(){
-       if($this->peso <= 20){
-            return self::PESO_IDEAL;
+        $imc = $this->peso/ ($this->altura**2);
+       if($imc <= 20){
+            return $this->nombre . " tiene sobrepeso";
        }
-       else if($this->peso >= 20 && $this->peso <=25){
-            return self::INFRAPESO;
+       else if($imc >= 20 && $imc <=25){
+            return $this->nombre ." está por debajo de su peso ideal";
        }
-       else if($this->peso >= 25){
-            return self::SOBREPESO;
+       else if($imc >= 25){
+            return $this->nombre . " tiene sobrepeso";
        }
     }
 
@@ -140,20 +127,16 @@ class Persona{
         return self::strIMC();
     }
 
-    
-
     public function __toString(){
+        $sexo = ($this->sexo === "H") ? "Hombre" : "Mujer";
         $resultadoIMC = $this->strIMC();
-    
-        return "Información de la persona:\n" .
-               "DNI: {$this->DNI}\n" .
+        return "\nInformación de la persona:\n" .
+               "DNI: {$this->generarDNI()}\n" .
                "Nombre: {$this->nombre}\n" .
-               "Sexo: {$this->sexo}\n" .
+               "Sexo: ". $sexo."\n" .
                "Edad: {$this->edad}\n" .
                "Peso: {$this->peso} Kg\n" .
                "Altura: {$this->altura} metros\n" .
                "Resultado IMC: {$resultadoIMC}\n";
     }
-    
-
 }
