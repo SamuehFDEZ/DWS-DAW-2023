@@ -1,32 +1,23 @@
 <?php 
 include_once "Animal.php";
+class Ave extends Animal {
+    private static $totalAves = 0;
 
-abstract class Ave extends Animal{
-
-    private $totalAves;
-
-    public static function getTotalAves(){
-        return self::$totalAves;
+    public function __construct($sexo = "M") {
+        parent::__construct($sexo);
+        self::$totalAves++;
     }
 
-    public function setTotalAves($totalAves){
-        $this->totalAves = $totalAves;
+    public static function getTotalAves() {
+        return "Hay un total de " . self::$totalAves . " aves\n";
     }
 
-    public function __construct(){
-
+    public function ponerHuevo() {
+        echo $this . ": He puesto un huevo!\n";
     }
 
-    public function ponerHuevo(){
-
+    public function __toString() {
+        return parent::__toString() . ", un Ave";
     }
-
-
-    public function __toString(){
-        return "";
-    }
-
-
 }
-
 ?>

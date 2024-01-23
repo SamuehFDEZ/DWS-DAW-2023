@@ -1,61 +1,34 @@
 <?php 
+abstract class Animal {
+    private static $totalAnimales = 0;
+    protected $sexo;
 
-abstract class Animal{
-    private $sexo = "M";
-    private static $totalAnimales;
-
-
-    public function getSexo(){
-        return $this->sexo;
-    }
-
-    public function setSexo($sexo){
+    public function __construct($sexo = "M") {
         $this->sexo = $sexo;
-    }
-
-    public static function getTotalAnimales(){
-        return self::$totalAnimales;
-    }
-
-    public function setTotalAnimales($totalAnimales){
-        $this->totalAnimales = $totalAnimales;
-    }
-
-
-    public function dormirse(){
-
-    }
-
-    public function alimentarse(){
-
-    }
-
-    public function morirse(){
-
-    }
-
-    public function __construct(){
         self::$totalAnimales++;
     }
 
-    public static function consSexo($sexo){
-        $self = new static();
-        $self->sexo = $sexo;
-        self::$totalAnimales++;
-        return $self;
+    public static function getTotalAnimales() {
+        return "Hay un total de " . self::$totalAnimales . " animales\n";
     }
 
-    public static function consFull($sexo, $nombre){
-        $self = new static();
-        $self->sexo = $sexo;
-        $self->$nombre = $nombre;
-        self::$totalAnimales++;
-        return $self;
+    public function dormirse() {
+        echo $this . ": Zzzzzzz\n";
     }
 
-    public function __toString(){
-        return "";
+    public function alimentarse() {
+        echo $this . ": Estoy comiendo\n";
+    }
+
+    public function morirse() {
+        echo $this . ": Adiós!\n";
+        self::$totalAnimales--;
+    }
+
+    public function __toString() {
+        return "Soy un Animal";
     }
 }
+
 
 ?>

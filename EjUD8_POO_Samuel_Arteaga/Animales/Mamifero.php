@@ -1,34 +1,25 @@
 <?php 
 include_once "Animal.php";
 
-abstract class Mamifero extends Animal{
+class Mamifero extends Animal {
+    private static $totalMamiferos = 0;
 
-    private $totalMamiferos;
-
-    public static function getTotalMamiferos(){
-        return self::$totalMamiferos;
+    public function __construct($sexo = "M") {
+        parent::__construct($sexo);
+        self::$totalMamiferos++;
     }
 
-    public function setTotalMamiferos($totalMamiferos){
-        $this->totalMamiferos = $totalMamiferos;
+    public static function getTotalMamiferos() {
+        return "Hay un total de " . self::$totalMamiferos . " mamíferos\n";
     }
 
-    public function __construct(){
-
+    public function amamantar() {
+        echo $this . ": Amamantando a mis crías\n";
     }
 
-    public function amamantar(){
-
+    public function __toString() {
+        return parent::__toString() . ", un Mamífero";
     }
-
-    public function __toString(){
-        return "";
-    }
-
-
-
 }
-
-
 
 ?>
