@@ -7,30 +7,50 @@ class Canario extends Ave {
         $this->nombre = $nombre;
     }
 
-    public function pia() {
-        echo $this . ": Pio pio pio\n";
+    public function getNombre() {
+        return $this->nombre;
     }
 
+    public function pia() {
+        echo "Canario ". $this->getNombre() . ": Pio pio pio\n";
+    }
     public function __construct(){
-        $this->nombre = $nombre;
+        $this->nombre = $this->getNombre();
     }
 
     public function alimentarse() {
-        echo $this . ": Estoy comiendo alpiste\n";
+        echo "Canario ". $this->getNombre() . ": Estoy comiendo alpiste\n";
+    }
+
+    public function ponerHuevo() {
+        echo "Canario ". $this->getNombre() . ": He puesto un huevo!\n";
+    }
+
+    public function morirse() {
+        echo "Canario ". $this->getNombre() . ": Adiós!\n";
+        Animal::$totalAnimales--;
     }
 
     public static function consSexo($sexo){
-        self::$sexo = $sexo;
+        $canario = new self(); 
+
+        $canario->setSexo($sexo);
+
+        return $canario;
     }
 
     public static function consFull($sexo, $nombre){
-        self::$sexo = $sexo;
-        self::$nombre = $nombre;
+        $canario = new self(); 
+
+        $canario->setSexo($sexo);
+        $canario->setNombre($nombre);
+
+        return $canario;
     }
 
 
     public function __toString() {
-        return parent::__toString() . ", en concreto un Canario, con sexo " . strtoupper($this->sexo) . ", llamado " . $this->nombre;
+        return parent::__toString() . ", en concreto un Canario, con sexo " . strtoupper($this->getSexo()) . ", llamado " . $this->getNombre(). "\n";
     }
 }
 

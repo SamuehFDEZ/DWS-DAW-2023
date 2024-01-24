@@ -8,26 +8,54 @@ class Pinguino extends Ave {
         $this->nombre = $nombre;
     }
 
+    public function getNombre() {
+        return $this->nombre;
+    }
+
+    public function dormirse() {
+        echo "Pinguino ". $this->getNombre() . ": Zzzzzzz\n";
+    }
+
+    public function morirse() {
+        echo "Pinguino ". $this->getNombre() . ": Adiós!\n";
+        Animal::$totalAnimales--;
+    }
+
+    public function ponerHuevo() {
+        echo "Pinguino ". $this->getNombre() . ": He puesto un huevo!\n";
+    }
+
+
+
     public function programar() {
-        echo $this . ": Soy un pingüino programador en PHP\n";
+        echo "Pinguino ". $this->getNombre() . ": Soy un pingüino programador en PHP\n";
     }
 
     public function alimentarse() {
-        echo $this . ": Estoy comiendo peces\n";
+        echo "Pinguino ". $this->getNombre() . ": Estoy comiendo peces\n";
     }
 
+
     public static function consSexo($sexo){
-        self::$sexo = $sexo;
+        $pinguino = new self(); 
+
+        $pinguino->setSexo($sexo);
+
+        return $pinguino;
     }
 
     public static function consFull($sexo, $nombre){
-        self::$sexo = $sexo;
-        self::$nombre = $nombre;
+        $pinguino = new self(); 
+
+        $pinguino->setSexo($sexo);
+        $pinguino->setNombre($nombre);
+
+        return $pinguino;
     }
 
 
     public function __toString() {
-        return parent::__toString() . ", en concreto un Pingüino, con sexo " . strtoupper($this->sexo) . ", llamado " . $this->nombre;
+        return parent::__toString() . ", en concreto un Pingüino, con sexo " . strtoupper($this->getSexo()) . ", llamado " . $this->getNombre(). "\n";
     }
 }
 

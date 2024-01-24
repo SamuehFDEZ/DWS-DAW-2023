@@ -1,9 +1,17 @@
 <?php 
 abstract class Animal {
-    private static $totalAnimales = 0;
+    static $totalAnimales = 0;
     protected $sexo;
 
-    public function __construct($sexo = "M") {
+    public function getSexo() {
+        return $this->sexo;
+    }
+
+    public function setSexo($sexo) {
+        $this->sexo = $sexo;
+    }
+
+    public function __construct($sexo) {
         $this->sexo = $sexo;
         self::$totalAnimales++;
     }
