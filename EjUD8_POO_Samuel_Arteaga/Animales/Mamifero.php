@@ -2,11 +2,11 @@
 include_once "Animal.php";
 
 class Mamifero extends Animal {
-    private static $totalMamiferos = 0;
+    static $totalMamiferos = 0;
 
     public function __construct($sexo = "M") {
         parent::__construct($sexo);
-        self::$totalMamiferos++;
+
     }
 
     public static function getTotalMamiferos() {

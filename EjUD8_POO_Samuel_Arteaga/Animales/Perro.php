@@ -35,13 +35,18 @@ class Perro extends Mamifero {
 
     public function morirse() {
         echo "Perro ". $this->getNombre() . ": Adiós!\n";
-        Animal::$totalAnimales--;
+        Mamifero::$totalMamiferos--;
     }
 
     public function dormirse() {
         echo "Perro ". $this->getNombre() . ": Zzzzzzz\n";
     }
 
+    public function __construct($sexo = 'M'){
+        parent::__construct($sexo);
+        Mamifero::$totalMamiferos++;
+
+    }
 
     public static function consSexoNombre($sexo, $nombre){
         $perro = new self(); 
@@ -62,9 +67,12 @@ class Perro extends Mamifero {
         return $perro;
     }
 
-
     public function __toString() {
-        return parent::__toString() . ", en concreto un Perro, con sexo " . strtoupper($this->getSexo()) . ", raza " . $this->getRaza() . " y mi nombre es " . $this->getNombre() ."\n";
+        $sexo = ($this->sexo === "H") ? "Hembra" : "Macho";
+        if ($this->nombre === null) {
+            return parent::__toString() . ", en concreto un Perro, con sexo " . strtoupper($sexo) . ", raza " . $this->getRaza() . " y no tengo nombre \n";
+        }
+        return parent::__toString() . ", en concreto un Perro, con sexo " . strtoupper($sexo) . ", raza " . $this->getRaza() . " y mi nombre es " . $this->getNombre() ."\n";
     }
 }
 ?>

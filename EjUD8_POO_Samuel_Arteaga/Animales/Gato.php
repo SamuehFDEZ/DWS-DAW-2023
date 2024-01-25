@@ -31,7 +31,7 @@ class Gato extends Mamifero {
 
     public function morirse() {
         echo "Gato ". $this->getNombre() . ": Adiós!\n";
-        Animal::$totalAnimales--;
+        Mamifero::$totalMamiferos--;
     }
 
     public function dormirse() {
@@ -44,6 +44,8 @@ class Gato extends Mamifero {
 
     public function __construct($sexo = 'M'){
         parent::__construct($sexo);
+        Mamifero::$totalMamiferos++;
+
     }
 
     public static function consSexoNombre($sexo, $nombre){
@@ -65,7 +67,12 @@ class Gato extends Mamifero {
         return $gato;
     }
     public function __toString() {
-        return parent::__toString() . ", en concreto un Gato, con sexo " . strtoupper($this->getSexo()) . ", raza " . $this->getRaza() . " y mi nombre es " . $this->getNombre()."\n";
+        $sexo = ($this->sexo === "H") ? "Hembra" : "Macho";
+        if ($this->nombre === null) {
+            return parent::__toString() . ", en concreto un Gato, con sexo " . strtoupper($sexo) . ", raza " . $this->getRaza() . " y no tengo nombre \n";
+        }
+        return parent::__toString() . ", en concreto un Gato, con sexo " . strtoupper($sexo) . ", raza " . $this->getRaza() . " y mi nombre es " . $this->getNombre()."\n";
+       
     }
 }
 

@@ -18,7 +18,7 @@ class Pinguino extends Ave {
 
     public function morirse() {
         echo "Pinguino ". $this->getNombre() . ": Adiós!\n";
-        Animal::$totalAnimales--;
+        Ave::$totalAves--;
     }
 
     public function ponerHuevo() {
@@ -35,6 +35,11 @@ class Pinguino extends Ave {
         echo "Pinguino ". $this->getNombre() . ": Estoy comiendo peces\n";
     }
 
+    public function __construct(){
+        $this->nombre = $this->getNombre();
+        Ave::$totalAves++;
+
+    }
 
     public static function consSexo($sexo){
         $pinguino = new self(); 
@@ -55,7 +60,8 @@ class Pinguino extends Ave {
 
 
     public function __toString() {
-        return parent::__toString() . ", en concreto un Pingüino, con sexo " . strtoupper($this->getSexo()) . ", llamado " . $this->getNombre(). "\n";
+        $sexo = ($this->sexo === "H") ? "Hembra" : "Macho";
+        return parent::__toString() . ", en concreto un Pingüino, con sexo " . strtoupper($sexo) . ", llamado " . $this->getNombre(). "\n";
     }
 }
 

@@ -1,11 +1,12 @@
 <?php 
 include_once "Animal.php";
 class Ave extends Animal {
-    private static $totalAves = 0;
+    static $totalAves = 0;
 
     public function __construct($sexo = "M") {
         parent::__construct($sexo);
         self::$totalAves++;
+        Animal::$totalAnimales++;
     }
 
     public static function getTotalAves() {

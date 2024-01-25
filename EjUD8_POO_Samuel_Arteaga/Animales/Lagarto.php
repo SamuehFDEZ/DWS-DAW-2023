@@ -13,13 +13,15 @@ class Lagarto extends Animal {
 
     public function __construct(){
         $this->nombre = $this->getNombre();
+        Animal::$totalAnimales++;
+
     }
 
     public static function consSexo($sexo){
         $lagarto = new self(); 
 
         $lagarto->setSexo($sexo);
-
+        
         return $lagarto;
     }
 
@@ -28,7 +30,6 @@ class Lagarto extends Animal {
 
         $lagarto->setSexo($sexo);
         $lagarto->setNombre($nombre);
-
         return $lagarto;
     }
 
@@ -51,7 +52,9 @@ class Lagarto extends Animal {
     }
 
     public function __toString() {
-        return parent::__toString() . ", en concreto un Lagarto, con sexo " . strtoupper(parent::getSexo()) . ", llamado " . $this->getNombre(). "\n";
+        $sexo = ($this->sexo === "H") ? "Hembra" : "Macho";
+
+        return parent::__toString() . ", en concreto un Lagarto, con sexo " . strtoupper($sexo) . ", llamado " . $this->getNombre(). "\n";
     }
 }
 
