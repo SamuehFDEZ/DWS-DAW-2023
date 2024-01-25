@@ -32,6 +32,7 @@ class Gato extends Mamifero {
     public function morirse() {
         echo "Gato ". $this->getNombre() . ": Adiós!\n";
         Mamifero::$totalMamiferos--;
+        Animal::$totalAnimales--;
     }
 
     public function dormirse() {

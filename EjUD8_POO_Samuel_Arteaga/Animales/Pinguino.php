@@ -19,6 +19,7 @@ class Pinguino extends Ave {
     public function morirse() {
         echo "Pinguino ". $this->getNombre() . ": Adiós!\n";
         Ave::$totalAves--;
+        Animal::$totalAnimales--;
     }
 
     public function ponerHuevo() {
@@ -38,12 +39,13 @@ class Pinguino extends Ave {
     public function __construct(){
         $this->nombre = $this->getNombre();
         Ave::$totalAves++;
+        Animal::$totalAnimales++;
 
     }
 
     public static function consSexo($sexo){
         $pinguino = new self(); 
-
+        
         $pinguino->setSexo($sexo);
 
         return $pinguino;
@@ -51,7 +53,7 @@ class Pinguino extends Ave {
 
     public static function consFull($sexo, $nombre){
         $pinguino = new self(); 
-
+       
         $pinguino->setSexo($sexo);
         $pinguino->setNombre($nombre);
 

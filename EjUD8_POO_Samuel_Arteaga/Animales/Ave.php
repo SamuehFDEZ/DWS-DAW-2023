@@ -5,8 +5,6 @@ class Ave extends Animal {
 
     public function __construct($sexo = "M") {
         parent::__construct($sexo);
-        self::$totalAves++;
-        Animal::$totalAnimales++;
     }
 
     public static function getTotalAves() {

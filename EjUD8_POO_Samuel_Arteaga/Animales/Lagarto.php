@@ -19,7 +19,6 @@ class Lagarto extends Animal {
 
     public static function consSexo($sexo){
         $lagarto = new self(); 
-
         $lagarto->setSexo($sexo);
         
         return $lagarto;
@@ -30,6 +29,7 @@ class Lagarto extends Animal {
 
         $lagarto->setSexo($sexo);
         $lagarto->setNombre($nombre);
+
         return $lagarto;
     }
 

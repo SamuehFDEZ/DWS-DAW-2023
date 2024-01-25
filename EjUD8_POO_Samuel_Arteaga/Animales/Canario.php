@@ -16,6 +16,7 @@ class Canario extends Ave {
     }
     public function __construct(){
         $this->nombre = $this->getNombre();
+        Animal::$totalAnimales++;
         Ave::$totalAves++;
 
     }
@@ -31,10 +32,13 @@ class Canario extends Ave {
     public function morirse() {
         echo "Canario ". $this->getNombre() . ": Adiós!\n";
         Ave::$totalAves--;
+        Animal::$totalAnimales--;
+
     }
 
     public static function consSexo($sexo){
         $canario = new self(); 
+        //Animal::$totalAnimales++;
 
         $canario->setSexo($sexo);
 
@@ -43,6 +47,7 @@ class Canario extends Ave {
 
     public static function consFull($sexo, $nombre){
         $canario = new self(); 
+        //Animal::$totalAnimales++;
 
         $canario->setSexo($sexo);
         $canario->setNombre($nombre);

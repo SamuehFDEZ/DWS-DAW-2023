@@ -36,6 +36,7 @@ class Perro extends Mamifero {
     public function morirse() {
         echo "Perro ". $this->getNombre() . ": Adiós!\n";
         Mamifero::$totalMamiferos--;
+        Animal::$totalAnimales--;
     }
 
     public function dormirse() {
@@ -45,7 +46,6 @@ class Perro extends Mamifero {
     public function __construct($sexo = 'M'){
         parent::__construct($sexo);
         Mamifero::$totalMamiferos++;
-
     }
 
     public static function consSexoNombre($sexo, $nombre){

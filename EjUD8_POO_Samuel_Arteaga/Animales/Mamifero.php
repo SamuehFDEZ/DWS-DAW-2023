@@ -6,7 +6,6 @@ class Mamifero extends Animal {
 
     public function __construct($sexo = "M") {
         parent::__construct($sexo);
-
     }
 
     public static function getTotalMamiferos() {
