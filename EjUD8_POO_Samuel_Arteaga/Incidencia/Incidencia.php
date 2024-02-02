@@ -1,16 +1,8 @@
 <?php 
+/**
+ * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
+ */
 
-const USERNAME = "dwes";
-const PASSWORD = "dbdwespass";
-
-try {
-    $pdo = new PDO('mysql:host=localhost:33006;dbname=INCIDENCIAS', USERNAME, PASSWORD);
-    $resultado = $pdo->query("SELECT ESTADO FROM INCIDENCIA");
-    $fila = $resultado->fetch(PDO::FETCH_ASSOC);
-    echo "El ID de Cliente (pdo) es " . htmlentities($fila['ESTADO'] . "<br>\n");
-} catch (PDOException $e) {
-    print "No se ha podido realizar la conexión: " . $e->getMessage();
-}
 
 class Incidencia{
     static $codigoIncidencia = 0;
@@ -21,9 +13,23 @@ class Incidencia{
     private  $estado = "Pendiente"; 
     private $solucion;
 
+    public static function resetearBD(){
+        
+    }
 
+    public static function creaIncidencia($num, $mensaje){
+
+    }
    
+    public static function leeIncidencia($objeto){
 
+    }
+
+    public static function leeTodasIncidencias(){
+
+    }
+
+    
     public function getCodigoIncidencia(){
         return self::$codigoIncidencia;
     }

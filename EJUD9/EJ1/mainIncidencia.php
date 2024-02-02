@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Silvia Vilar
+ * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  * Ej1UD9 - mainIncidencia.php
  */ 
 include_once "Incidencia.php";
