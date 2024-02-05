@@ -4,6 +4,7 @@
  * Ej1UD9 - mainIncidencia.php
  */ 
 include_once "../../EjUD8_POO_Samuel_Arteaga/Incidencia/Incidencia.php";
+include_once "../traitDB.php";
 Incidencia::resetearBD();
 traitDB::connectDB();
 $inc1 = Incidencia::creaIncidencia(105, "No tiene acceso a internet");

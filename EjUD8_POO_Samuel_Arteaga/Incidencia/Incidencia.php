@@ -76,7 +76,12 @@ class Incidencia{
     }
 
     public static function borraIncidencia(){
-
+        $conn = traitDB::connectDB();
+        $sql = "DELETE * FROM INCIDENCIA WHERE CODIGO = ?";
+        $stmt = $conn->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $result;
     }
 
     
