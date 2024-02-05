@@ -9,7 +9,7 @@ const PASSWORD = "dbdwespass";
 trait traitDB{
     public static function connectDB(){
         try {
-            $conn = new PDO('mysql:host=localhost:33006;dbname=EMPRESA', USERNAME, PASSWORD);
+            $conn = new PDO('mysql:host=localhost:33006;dbname=INCIDENCIAS', USERNAME, PASSWORD);
 
         } catch (PDOException $e) {
             die("Conexión fallida: " . $e->getMessage());
