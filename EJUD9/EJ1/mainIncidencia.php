@@ -3,8 +3,9 @@
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  * Ej1UD9 - mainIncidencia.php
  */ 
-include_once "Incidencia.php";
+include_once "../../EjUD8_POO_Samuel_Arteaga/Incidencia/Incidencia.php";
 Incidencia::resetearBD();
+traitDB::connectDB();
 $inc1 = Incidencia::creaIncidencia(105, "No tiene acceso a internet");
 $inc2 = Incidencia::creaIncidencia(14, "No arranca");
 $inc3 = Incidencia::creaIncidencia(5, "La pantalla se ve rosa");
