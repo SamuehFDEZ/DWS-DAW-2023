@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__."/../db.php";
-include_once "../EjUD8_POO_Samuel_Arteaga/Incidencia/Incidencia.php";
+include_once "EJ1/Incidencia.php";
 
 const USERNAME = "dwes";
 const PASSWORD = "dbdwespass";
@@ -65,3 +64,4 @@ trait traitDB{
         
     }
 }
+?>

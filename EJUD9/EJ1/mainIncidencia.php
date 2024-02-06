@@ -3,7 +3,7 @@
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  * Ej1UD9 - mainIncidencia.php
  */ 
-include_once "../../EjUD8_POO_Samuel_Arteaga/Incidencia/Incidencia.php";
+include_once "Incidencia.php";
 include_once "../traitDB.php";
 Incidencia::resetearBD();
 traitDB::connectDB();
