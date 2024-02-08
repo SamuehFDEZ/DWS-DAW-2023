@@ -41,27 +41,23 @@ class Incidencia{
         }
     }
     
-    public static function creaIncidencia($num, $mensaje){
-
+    public static function creaIncidencia($num, $mensaje) {
         $self = new self($num, $mensaje);
+        $conn = self::connectDB();
         
-        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES ('".Incidencia::getCodigo()."', ?, ?, ?, ?)";
-        $stmt = self::queryPreparadaDB($sql, $self);
-        $stmt->execute([$self->codigo, $self->estado, $self->numero, $self->incidencia, $self->solucion]);
+        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([self::$codigoIncidencia, $self->estado, $self->numero, $self->incidencia, $self->solucion]);
         
-
-        $affectedRows = connectBD()->exec("INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) 
-        VALUES ('".self::$codigo."', '".self::$estado."','".self::$puesto."', '".self::$problema."', '".self::$solucion."')");
-        
-        if (false === $affectedRows) { 
-            $error = connectBD()->errorInfo();
-            print "No se ha podido realizar la inserción!\n";
-            print "SQL Error={$error[0]}, DB Error={$error[1]}, Message={$error[2]}\n";
-        } 
-        else {
-        print "Se han insertado " . $affectedRows . " filas.\n";
-        } 
+        if ($stmt->rowCount() > 0) {
+            echo "Incidencia con código " . self::$codigoIncidencia . " creada correctamente.\n";
+            return $self; // Return the created Incidencia object
+        } else {
+            echo "No se ha podido crear la incidencia.\n";
+            return null;
+        }
     }
+    
     
     public static function leeIncidencia($codigo){
         $conn = traitDB::connectDB();
