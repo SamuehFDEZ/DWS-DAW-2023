@@ -2,7 +2,7 @@
 /**
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  */
-include_once "../traitDB.php";
+include_once __DIR__. "/../traitDB.php";
 class Incidencia{
     use traitDB;
     static $codigoIncidencia = 0;
@@ -42,17 +42,27 @@ class Incidencia{
     }
     
     public static function creaIncidencia($num, $mensaje){
+
         $self = new self($num, $mensaje);
         
-        $conn = traitDB::connectDB();
-        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES ('".Incidencia::getCodigo()."', ?, ?, ?, ?)";
+        $stmt = self::queryPreparadaDB($sql, $self);
         $stmt->execute([$self->codigo, $self->estado, $self->numero, $self->incidencia, $self->solucion]);
-    
-        return $self;
+        
+
+        $affectedRows = connectBD()->exec("INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) 
+        VALUES ('".self::$codigo."', '".self::$estado."','".self::$puesto."', '".self::$problema."', '".self::$solucion."')");
+        
+        if (false === $affectedRows) { 
+            $error = connectBD()->errorInfo();
+            print "No se ha podido realizar la inserción!\n";
+            print "SQL Error={$error[0]}, DB Error={$error[1]}, Message={$error[2]}\n";
+        } 
+        else {
+        print "Se han insertado " . $affectedRows . " filas.\n";
+        } 
     }
     
-   
     public static function leeIncidencia($codigo){
         $conn = traitDB::connectDB();
         $sql = "SELECT * FROM INCIDENCIA WHERE CODIGO = ?";
@@ -63,7 +73,6 @@ class Incidencia{
         return $result;
     }
     
-
     public static function leeTodasIncidencias(){
         $conn = traitDB::connectDB();
         $sql = "SELECT * FROM INCIDENCIA";
@@ -73,23 +82,23 @@ class Incidencia{
         return $result;
     }
     
-
     public function actualizaIncidencia($estado, $puesto, $problema, $solucion){
-        $this->estado = $estado;
-        $this->numero = $puesto;
-        $this->incidencia = $problema;
-        $this->solucion = $solucion;
         
-        $conn = traitDB::connectDB();
-        $sql = "UPDATE INCIDENCIA SET ESTADO = ?, PUESTO = ?, PROBLEMA = ?, RESOLUCION = ? WHERE CODIGO = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$this->estado, $this->numero, $this->incidencia, $this->solucion, $this->codigo]);
+        $sql = "UPDATE INCIDENCIA SET ESTADO = '".$estado."', PUESTO = '".$puesto."', PROBLEMA = '".$problema."'., RESOLUCION = '".$solucion."'. WHERE CODIGO = ".$this->getCodigo()."";
+        $result = $this->execDB($sql);
+        if($result){
+            echo "exito";
+        }
+        else{
+            print "No se ha podido actualizar\n";
+        }
+
     }
     
 
     public function borraIncidencia(){
         $conn = traitDB::connectDB();
-        $sql = "DELETE FROM INCIDENCIA WHERE CODIGO = ".$this->getCodigo()."";
+        $sql = "DELETE FROM INCIDENCIA WHERE CODIGO = {$this->getCodigo()}";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         
@@ -149,7 +158,7 @@ class Incidencia{
     
 
     public static function getPendientes(){
-        return self::$codigoIncidencia;
+        return self::$codigoIncidencia. "\n";
         
     }
 

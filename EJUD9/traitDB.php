@@ -19,12 +19,10 @@ trait traitDB{
 
     public function execDB($sql){
         try {
-            $result = self::connectDB()->$sql->exec();
-            return $result;
+            return $sql->exec();
         } catch (PDOException $e) {
             die("Conexión fallida: " . $e->getMessage());
         }
-        
     }
 
     public static function queryPreparadaDB($sql, $parametros){
