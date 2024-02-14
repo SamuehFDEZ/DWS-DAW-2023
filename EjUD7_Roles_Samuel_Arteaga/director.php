@@ -1,4 +1,6 @@
 <?php
+/*Del ejercicio 2 de roles */
+
 session_start();
 
 echo "Hola <b>director</b> " . ", " . $_SESSION["nombre"] . " " . $_SESSION["apellidos"] . " has escogido la asignatura " . $_SESSION["asignatura"] . " y el grupo " . $_SESSION["grupo"];

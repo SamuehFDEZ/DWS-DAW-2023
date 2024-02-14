@@ -1,4 +1,6 @@
 <?php
+/*Del ejercicio 1 de tokens */
+
     session_start();
 
     function salarioMaximo(){

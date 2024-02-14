@@ -1,4 +1,6 @@
 <?php
+/*Del ejercicio 1 de tokens */
+
 session_start();
 
 echo "Hola <b>estudiante</b> " . $_SESSION["nombre"] . " " . $_SESSION["apellidos"] . "has escogido la asignatura " . $_SESSION["asignatura"] . "y este grupo " . $_SESSION["grupo"]."<br>";

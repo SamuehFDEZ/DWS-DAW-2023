@@ -1,4 +1,6 @@
 <?php
+/*Del ejercicio 1 de roles */
+
     session_start();
 
     function salarioMaximo(){
