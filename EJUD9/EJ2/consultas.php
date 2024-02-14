@@ -4,302 +4,648 @@
  * @author Samuel Arteaga López <samu.ar.lo.04@gmail.com>
  * Ejercicio 2. Consultas
  */
-include_once __DIR__ . '\..\..\db.php';
+include_once "../traitDB.php";
+include_once "./funciones.php";
 
 
 // Verifica si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $conn = new PDO('mysql:host=localhost:3306;dbname=EMPRESA', USERNAME, PASSWORD);
+    $conn = new PDO('mysql:host=localhost:33006;dbname=EMPRESA', USERNAME, PASSWORD);
 
     // Determina el tipo de consulta
-    $consulta = null;
 
-    switch ($consulta) {
+    switch ($_POST["tipoConsulta"]) {
         // Consultas de Clientes
         case 'ClientePorDni':
             //Listado de todos los clientes ordenados por dni de cliente
-            $dni = $_POST['dni'];
+            $dni = $_POST['DNI'];
             $sql = "SELECT * 
-                    FROM CLIENTE 
+                    FROM EMPRESA.CLIENTE 
                     WHERE DNI = '$dni'";
+            $result = $conn->query($sql, PDO::FETCH_ASSOC);
+            printTablaClientes($result);
             break;
 
         case 'ListadoClientes':
             //Datos de Clientes de una Población seleccionada ordenados por dni de cliente
             $sql = "SELECT * 
-                    FROM CLIENTE ORDER BY DNI";
+                    FROM EMPRESA.CLIENTE 
+                    ORDER BY DNI";
+            $result = $conn->query($sql);
+            printTablaClientes($result);
             break;
 
         case 'ClientesDadapoblacion':
             //Listado de Clientes de una población seleccionada ordenados por población
 
-            $poblacion = $_POST['poblacion'];
+            $poblacion = $_POST['POBLACION'];
             $sql = "SELECT * 
-                    FROM CLIENTE WHERE POBLACION = '$poblacion' ORDER BY DNI";
+                    FROM EMPRESA.CLIENTE 
+                    WHERE POBLACION = '$poblacion' 
+                    ORDER BY DNI";
+            $result = $conn->query($sql);
+            printTablaClientes($result);
             break;
 
         case 'ListadoClientesPorPoblacion':
             //Datos de Clientes que han realizado compras ordenados por dni de cliente
 
             $sql = "SELECT * 
-                    FROM CLIENTE ORDER BY POBLACION";
+                    FROM EMPRESA.CLIENTE 
+                    GROUP BY POBLACION
+                    ORDER BY DNI";
+            $result = $conn->query($sql);
+            printTablaClientes($result);
             break;
 
         case 'NumeroClientesPorPoblacion':
             //Datos de Clientes que no han realizado compras ordenados por dni de cliente
-
-            $sql = "SELECT POBLACION, COUNT(*) AS NUMERO_CLIENTES 
-                    FROM CLIENTE GROUP BY POBLACION ORDER BY POBLACION";
-            break;
-
+                $sql = "SELECT POBLACION, COUNT(*) AS NUMERO_CLIENTES 
+                    FROM EMPRESA.CLIENTE 
+                    GROUP BY POBLACION 
+                    ORDER BY POBLACION";
+                    $result = $conn->query($sql);
+                    if(isset($_POST["aJson"])){
+                    header('Content-Type:application/json; charset=UTF-8');
+                    $vectorDeClientes = [];
+                    // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                    //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                    foreach ($result as $clientes) {
+                        //dentro del vector de clientes almacenamos la info de la query
+                        $vectorDeClientes[] = $clientes;   
+                    }
+                    // imprimimos en formato json lo que vamos metiendo al array
+                    echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                }
+                else{
+                    echo "<table><tr><td>POBLACION</td><td>NUMERO_CLIENTES</td></tr>";
+                    foreach ($result as $clientes) {
+                        echo "<tr><td>$clientes[POBLACION]</td><td>$clientes[NUMERO_CLIENTES]</td><tr>";
+                    }
+                    echo "<table>";
+                }
+               
+                break;
+        
         case 'ListadoClientesConCompras':
             //Datos de Clientes que han realizado compras de una población seleccionada ordenados por dni de cliente
-
-            $sql = "SELECT C.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE GROUP BY C.DNI ORDER BY C.DNI";
+            $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
+                    FROM EMPRESA.CLIENTE CL 
+                    INNER JOIN EMPRESA.COMPRA C ON CL.DNI = C.CLIENTE 
+                    GROUP BY CL.DNI 
+                    ORDER BY CL.DNI";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+          
             break;
 
         case 'ListadoClientesSinCompras':
             //Datos de Clientes que no han realizado compras de una población seleccionada ordenados por dni de cliente
 
             $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL LEFT JOIN COMPRA C ON CL.DNI = C.CLIENTE WHERE C.CLIENTE IS NULL ORDER BY CL.DNI";
+                    FROM EMPRESA.CLIENTE CL 
+                    LEFT JOIN EMPRESA.COMPRA C ON CL.DNI = C.CLIENTE 
+                    WHERE CL.DNI IS NULL ORDER BY CL.DNI";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+            
             break;
 
         case 'ListadoClientesConComprasDadaPoblacion':
             //Datos de Clientes que han realizado compras con algún cliente de la población de Valencia ordenados por dni de cliente
-            $poblacion = $_POST['poblacion'];
-            $sql = "SELECT C.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    
-                            FROM CLIENTE CL 
+            $poblacion = $_POST['POBLACION'];
+            $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
+                    FROM EMPRESA.CLIENTE CL 
                     INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE 
                     WHERE CL.POBLACION = '$poblacion' 
-                    GROUP BY C.DNI 
-                    ORDER BY C.DNI";
+                    GROUP BY CL.DNI 
+                    ORDER BY CL.DNI";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+           
             break;
 
         case 'ListadoClientesSinComprasDadaPoblacion':
             //Listado de clientes que han realizado 3 o más compras ordenados por dni de cliente
-            $poblacion = $_POST['poblacion'];
+            $poblacion = $_POST['POBLACION'];
             $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL LEFT JOIN COMPRA C ON CL.DNI = C.CLIENTE WHERE CL.POBLACION = '$poblacion' AND C.CLIENTE IS NULL ORDER BY CL.DNI";
+                    FROM EMPRESA.CLIENTE CL 
+                    LEFT JOIN COMPRA C ON CL.DNI = C.CLIENTE 
+                    WHERE CL.POBLACION = '$poblacion' AND C.CLIENTE IS NULL 
+                    ORDER BY CL.DNI";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+           
             break;
 
         case 'ListadoClientesConComprasValencia':
             //Listado de clientes que han realizado 3 compras o más de una población seleccionada ordenados por dni de cliente
-            $sql = "SELECT C.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE WHERE CL.POBLACION = 'Valencia' GROUP BY C.DNI ORDER BY C.DNI";
+            $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
+                    FROM EMPRESA.CLIENTE CL 
+                    INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE 
+                    WHERE CL.POBLACION = 'Valencia' 
+                    GROUP BY C.CLIENTE 
+                    ORDER BY C.CLIENTE";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+           
             break;
 
         case 'ListadoClientesConTresOMasCompras':
             //Datos de proveedor por NIF
 
-            $sql = "SELECT C.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE GROUP BY C.DNI HAVING COUNT(*) >= 3 ORDER BY C.DNI";
+            $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
+                    FROM EMPRESA.CLIENTE CL 
+                    INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE 
+                    GROUP BY C.CLIENTE 
+                    HAVING COUNT(*) >= 3 
+                    ORDER BY C.CLIENTE";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+           
             break;
 
         case 'ListadoClientesConTresComprasOMasPorPoblacion':
             //Listado de todos los proveedores ordenados por nif de proveedor
+            $poblacion = $_POST['POBLACION'];
 
-            $poblacion = $_POST['poblacion'];
-            $sql = "SELECT C.DNI, CL.NOMBRE, CL.APELLIDOS 
-                    FROM CLIENTE CL INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE WHERE CL.POBLACION = '$poblacion' GROUP BY C.DNI HAVING COUNT(*) >= 3 ORDER BY C.DNI";
+            $sql = "SELECT CL.DNI, CL.NOMBRE, CL.APELLIDOS 
+                    FROM EMPRESA.CLIENTE CL 
+                    INNER JOIN COMPRA C ON CL.DNI = C.CLIENTE 
+                    WHERE CL.POBLACION = '$poblacion' 
+                    GROUP BY C.CLIENTE 
+                    HAVING COUNT(*) >= 3 
+                    ORDER BY C.CLIENTE";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[DNI]</td><td>$clientes[NOMBRE]</td><td>$clientes[APELLIDOS]</td><tr>";
+                }
+                echo "<table>";
+            }
+           
             break;
 
         // Consultas con proveedores
         case 'ProveedorPorNif':
             //Datos de proveedores que empiezan por un texto seleccionado ordenados por nif de proveedor
-
-            $nif = $_POST['nif'];
+            $nif = $_POST['PROVEEDOR'];
             $sql = "SELECT * 
-                    FROM PROVEEDOR WHERE NIF = '$nif'";
+                    FROM EMPRESA.PROVEEDOR 
+                    WHERE NIF = '$nif'";
+            $result = $conn->query($sql);
+            printTablaProveedor($result);
             break;
 
         case 'ListadoProveedores':
             //Datos de proveedores con productos con precio mayor a 1000€ ordenados por nif de proveedor
 
             $sql = "SELECT * 
-                    FROM PROVEEDOR ORDER BY NIF";
+                    FROM EMPRESA.PROVEEDOR 
+                    ORDER BY NIF";
+            $result = $conn->query($sql);
+            printTablaProveedor($result);
             break;
 
         case 'ProveedoresEmpiezanPorTexto':
             //Datos de producto por COD_PROD
-            $texto = $_POST['parametro'];
-            $sql = "SELECT * 
-                    FROM PROVEEDOR WHERE NOMBRE LIKE '$texto%' ORDER BY NIF";
+            $texto = $_POST['PARAMETRO'];
+            $sql = "SELECT NOMBRE 
+                    FROM EMPRESA.PROVEEDOR 
+                    WHERE NOMBRE LIKE '$texto%' 
+                    ORDER BY NIF";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>NOMBRE</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[NOMBRE]</td><tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         case 'ProveedoresProductosPvpMayor1000':
             //Listado de todos los productos ordenados por codigo de producto
 
             $sql = "SELECT DISTINCT P.NIF, PR.NOMBRE 
-                    FROM PROVEEDOR P INNER JOIN PRODUCTO PR ON P.NIF = PR.PROVEEDOR WHERE PR.PVP > 1000 ORDER BY P.NIF";
+                    FROM EMPRESA.PROVEEDOR P 
+                    INNER JOIN PRODUCTO PR ON P.NIF = PR.PROVEEDOR 
+                    WHERE PR.PVP > 1000 
+                    ORDER BY P.NIF";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>NIF</td><td>NOMBRE</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[NIF]</td><td>$clientes[NOMBRE]</td><tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         // Consultas con productos
         case 'ProductoPorCodProd':
-            $codProd = $_POST['producto'];
+            $codProd = $_POST['PRODUCTO'];
             //Datos de productos con precio menor a 100 ordenados por codigo de producto
 
             $sql = "SELECT * 
-                    FROM PRODUCTO WHERE COD_PROD = '$codProd'";
+                    FROM EMPRESA.PRODUCTO 
+                    WHERE COD_PROD = '$codProd'";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         case 'ListadoProductos':
             //Productos con precio mayor al promedio ordenados por codigo de producto
 
             $sql = "SELECT * 
-                    FROM PRODUCTO ORDER BY COD_PROD";
+                    FROM EMPRESA.PRODUCTO 
+                    ORDER BY COD_PROD";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         case 'ProductosPvpMenorOIgual100':
             //Datos de productos con precio menor a 100 ordenados por codigo de producto
 
             $sql = "SELECT * 
-                    FROM PRODUCTO WHERE PVP <= 100 ORDER BY COD_PROD";
+                    FROM EMPRESA.PRODUCTO 
+                    WHERE PVP <= 100 
+                    ORDER BY COD_PROD";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         case 'ProductosPVPMayorPromedio':
             //Productos con precio mayor al promedio ordenados por codigo de producto
 
             $sql = "SELECT * 
-                    FROM PRODUCTO WHERE PVP > (SELECT AVG(PVP) 
-                    FROM PRODUCTO) ORDER BY COD_PROD";
+                    FROM EMPRESA.PRODUCTO 
+                    WHERE PVP > (
+                    SELECT AVG(PVP) 
+                    FROM EMPRESA.PRODUCTO) 
+                    ORDER BY COD_PROD";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         case 'PvpMaximoProductos':
             //PVP máximo de los productos
 
             $sql = "SELECT MAX(PVP) AS PVP_MAXIMO 
-                    FROM PRODUCTO";
+                    FROM EMPRESA.PRODUCTO";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>PVP_MAXIMO </td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[PVP_MAXIMO]</td><tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         case 'PvpMinimoProductos':
             //PVP mínimo de los productos
 
-            $sql = "SELECT MIN(PVP) AS PVP_MINIMO 
-                    FROM PRODUCTO";
+            $sql = "SELECT MIN(PVP) AS PVP_MINIMO
+                    FROM EMPRESA.PRODUCTO";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>PVP_MINIMO</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[PVP_MINIMO]</td><tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         case 'PvpPromedioProductos':
             //PVP promedio de los productos
 
-            $sql = "SELECT AVG(PVP) AS PVP_PROMEDIO 
-                    FROM PRODUCTO";
+            $sql = "SELECT AVG(PVP) AS PVP_PROMEDIO
+                    FROM EMPRESA.PRODUCTO";
+            $result = $conn->query($sql);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><tr><td>PVP_PROMEDIO</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr><td>$clientes[PVP_PROMEDIO]</td><tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         case "ProductosNombreContieneTexto":
             //Productos cuyo nombre contiene un texto dado ordenados por codigo de producto
 
-            $texto = $_POST['parametro'];
+            $texto = $_POST['PARAMETRO'];
             $sql = "SELECT * 
-                    FROM PRODUCTO WHERE NOMBRE LIKE '%$texto%' ORDER BY COD_PROD";
+                    FROM EMPRESA.PRODUCTO 
+                    WHERE NOMBRE LIKE '%$texto%' 
+                    ORDER BY COD_PROD";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         // Consultas con compras
         case 'ListadoCompras':
             //Listado de todas las compras mostrando nombre y apellidos de cliente, código y nombre de producto, nombre de proveedor, fecha y unidades ordenados por dni de cliente y código de producto
 
-            $sql = "SELECT CL.NOMBRE AS NOMBRE_CLIENTE, CL.APELLIDOS AS APELLIDOS_CLIENTE, PR.COD_PROD, PR.NOMBRE AS NOMBRE_PRODUCTO, PV.NOMBRE AS NOMBRE_PROVEEDOR, C.FECHA, C.UNIDADES 
-                    FROM COMPRA C
+            $sql = "SELECT CL.NOMBRE AS NOMBRE_CLIENTE, CL.APELLIDOS AS APELLIDOS_CLIENTE, PR.COD_PROD, PR.NOMBRE AS NOMBRE_PRODUCTO, PV.NOMBRE AS NOMBRE_PROVEEDOR, C.FECHA, C.UDES 
+                    FROM EMPRESA.COMPRA C
                     INNER JOIN CLIENTE CL ON C.CLIENTE = CL.DNI
                     INNER JOIN PRODUCTO PR ON C.PRODUCTO = PR.COD_PROD
                     INNER JOIN PROVEEDOR PV ON PR.PROVEEDOR = PV.NIF
                     ORDER BY CL.DNI, PR.COD_PROD";
+            $result = $conn->query($sql);
+            printTablaComprasClientes($result);
             break;
 
         case 'ComprasDeAnyo':
             //Datos de compras a partir de un año dado ordenados por fecha
 
-            $anio = $_POST['parametro'];
+            $anio = $_POST['PARAMETRO'];
             $sql = "SELECT * 
             FROM COMPRA WHERE YEAR(FECHA) >= $anio ORDER BY FECHA";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasDeCliente':
-            $dniCliente = $_POST['dni'];
+            $dniCliente = $_POST['DNI'];
             $sql = "SELECT * 
-            FROM COMPRA WHERE CLIENTE = '$dniCliente' ORDER BY FECHA";
+                    FROM EMPRESA.COMPRA 
+                    WHERE CLIENTE = '$dniCliente' 
+                    ORDER BY FECHA";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasDeProducto':
             //Datos de compras de un cliente dado ordenados por dni de cliente
 
-            $codProducto = $_POST['producto'];
+            $codProducto = $_POST['PRODUCTO'];
             $sql = "SELECT * 
-            FROM COMPRA WHERE PRODUCTO = '$codProducto' ORDER BY FECHA";
+                    FROM EMPRESA.COMPRA 
+                    WHERE PRODUCTO = '$codProducto' 
+                    ORDER BY CLIENTE";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasDeProveedor':
             //Datos de compras de un proveedor dado ordenados por nif de proveedor
+            $nifProveedor = $_POST['PROVEEDOR'];
 
-            $nifProveedor = $_POST['nif'];
-            $sql = "SELECT C.* 
-            FROM COMPRA C INNER JOIN PRODUCTO P ON C.PRODUCTO = P.COD_PROD WHERE P.PROVEEDOR = '$nifProveedor' ORDER BY C.FECHA";
+            $sql = "SELECT P.COD_PROD, P.NOMBRE, P.PROVEEDOR, P.PVP
+                    FROM EMPRESA.COMPRA C 
+                    INNER JOIN PRODUCTO P ON C.PRODUCTO = P.COD_PROD 
+                    WHERE P.PROVEEDOR = '$nifProveedor' 
+                    ORDER BY C.FECHA";
+            $result = $conn->query($sql);
+            printTablaProductos($result);
             break;
 
         case 'ComprasDePoblacion':
             //Datos de compras de una población dada ordenados por población
-
-            $poblacion = $_POST['parametro'];
+            $poblacion = $_POST['PARAMETRO'];
             $sql = "SELECT C.* 
-            FROM COMPRA C INNER JOIN CLIENTE CL ON C.CLIENTE = CL.DNI WHERE CL.POBLACION = '$poblacion' ORDER BY C.FECHA";
+                    FROM EMPRESA.COMPRA C 
+                    INNER JOIN CLIENTE CL ON C.CLIENTE = CL.DNI 
+                    WHERE CL.POBLACION = '$poblacion' 
+                    ORDER BY C.FECHA";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasDeClientesValencia':
             //Datos de compras con algún cliente de la población de Valencia ordenados por dni de cliente   
-
+            $poblacion = $_POST['POBLACION'];
             $sql = "SELECT C.* 
-            FROM COMPRA C INNER JOIN CLIENTE CL ON C.CLIENTE = CL.DNI WHERE CL.POBLACION = 'Valencia' ORDER BY C.FECHA";
+                    FROM EMPRESA.COMPRA C 
+                    INNER JOIN CLIENTE CL ON C.CLIENTE = CL.DNI 
+                    WHERE CL.POBLACION = '$poblacion' 
+                    ORDER BY C.FECHA";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasConIgualOMasDe2Unidades':
             //Datos de compras con igual o más de 2 unidades ordenados por dni de cliente
 
             $sql = "SELECT * 
-            FROM COMPRA WHERE UNIDADES >= 2 ORDER BY CLIENTE";
+            FROM EMPRESA.COMPRA WHERE UDES >= 2 ORDER BY CLIENTE";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasConMasDe3productos':
             //Datos de compras con más de 3 productos ordenados por dni de cliente
 
-            $sql = "SELECT CLIENTE, COUNT(*) AS NUMERO_COMPRAS 
-            FROM COMPRA GROUP BY CLIENTE HAVING COUNT(*) > 3 ORDER BY CLIENTE";
+            $sql = "SELECT CLIENTE, PRODUCTO, FECHA, UDES, COUNT(*) AS NUMERO_COMPRAS 
+                    FROM EMPRESA.COMPRA 
+                    GROUP BY CLIENTE 
+                    HAVING COUNT(*) > 3 
+                    ORDER BY CLIENTE";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         case 'ComprasMinimo10Unidades':
             //Datos de compras con un mínimo de 10 unidades ordenados por dni de cliente
 
-            $sql = "SELECT * 
-            FROM COMPRA WHERE UNIDADES >= 10 ORDER BY CLIENTE";
+            $sql = "SELECT c.CLIENTE, cl.NOMBRE, cl.APELLIDOS, c.PRODUCTO, p.NOMBRE AS NOMBRE_PRODUCTO, c.FECHA, c.UDES
+                    FROM COMPRA c
+                    INNER JOIN CLIENTE cl ON c.CLIENTE = cl.DNI
+                    INNER JOIN PRODUCTO p ON c.PRODUCTO = p.COD_PROD
+                    WHERE c.UDES >= 10
+                    ORDER BY c.CLIENTE";
+            $result = $conn->query($sql);
+            printTablaCompras($result);
             break;
 
         default:
             echo "Consulta no reconocida";
             break;
-    }
-}
-
-// Ejecuta la consulta si está definida
-if (isset($sql)) {
-    // Ejecutar la consulta y mostrar resultados
-    $result = $conn->query($sql);
-    if (self::$result->num_rows > 0) {
-        // Inicializar un array para almacenar los resultados
-        $resultados = array();
-
-        // Recorrer los resultados y almacenarlos en el array
-        while ($row = self::$result->fetch_assoc()) {
-            $resultados[] = $row;
-        }
-
-        // Cerrar la conexión
-        self::$conn->close();
-
-        // Devolver los resultados como JSON
-        echo json_encode($resultados);
-    } else {
-        echo "0 resultados";
     }
 }
 
@@ -311,6 +657,18 @@ if (isset($sql)) {
     <meta charset="UTF-8">
     <title>Ejercicios Consulta</title>
 </head>
+<style>
+        table{
+            border: 1px solid black;
+        }
+        td{
+            border: 1px solid black;
+        }
+        tr{
+            border: 1px solid black;
+        }
+      
+    </style>
 
 <body>
     <h1>Consultas de la BD Empresa</h1>
@@ -328,8 +686,7 @@ if (isset($sql)) {
             <option value="ListadoClientesSinComprasDadaPoblacion">Clientes sin compras de una población</option>
             <option value="ListadoClientesConComprasValencia">Clientes con compras de Valencia</option>
             <option value="ListadoClientesConTresOMasCompras">Clientes con 3 compras o más</option>
-            <option value="ListadoClientesConTresComprasOMasPorPoblacion">Clientes con 3 compras o más de una población
-            </option>
+            <option value="ListadoClientesConTresComprasOMasPorPoblacion">Clientes con 3 compras o más de una población</option>
             <option value="ProveedorPorNif">Proveedor dado NIF</option>
             <option value="ListadoProveedores">Listado de proveedores</option>
             <option value="ProveedoresEmpiezanPorTexto">Proveedores que empiezan por un texto</option>
@@ -354,68 +711,63 @@ if (isset($sql)) {
             <option value="ComprasMinimo10Unidades">Compras con un mínimo de 10 unidades</option>
         </select>
         </select>
-        <label for="dni">dni:</label>
-        <select name="dni" id="dni">
+        <label for="DNI">dni:</label>
+        <select name="DNI" id="DNI">
             <?php
-            // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
-            
-
-            // Obtiene los dnis de la base de datos
-            
-            // Muestra los dnis en un select
-            foreach ($dnis as $dni) {
-                echo "<option value='{$dni['dni']}'>{$dni['dni']}</option>";
-            }
+                // Obtiene los dnis de la base de datos
+                $dnis = traitDB::execDB("SELECT DNI 
+                                        FROM EMPRESA.CLIENTE");
+                // Muestra los dnis en un select
+                foreach ($dnis as $dni) {
+                    echo "<option value='{$dni['DNI']}'>{$dni['DNI']}</option>";
+                }
             ?>
         </select>
-        <label for="poblacion">población:</label>
-        <select name="poblacion" id="poblacion">
+        <label for="POBLACION">población:</label>
+        <select name="POBLACION" id="POBLACION">
             <?php
-            // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
-            
+                // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
+                $poblaciones = traitDB::execDB("SELECT POBLACION 
+                                                FROM EMPRESA.CLIENTE");
 
-            // Obtiene los dnis de la base de datos
-            
-
-            // Muestra los dnis en un select
-            foreach ($poblaciones as $poblacion) {
-                echo "<option value='{$poblacion['poblacion']}'>{$poblacion['poblacion']}</option>";
-            }
+                foreach ($poblaciones as $poblacion) {
+                    echo "<option value='{$poblacion['POBLACION']}'>{$poblacion['POBLACION']}</option>";
+                }
             ?>
         </select>
-        <label for="proveedor">proveedor:</label>
-        <select name="proveedor" id="proveedor">
+        <label for="PROVEEDOR">proveedor:</label>
+        <select name="PROVEEDOR" id="PROVEEDOR">
             <?php
-            // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
-            
-
-            // Obtiene los proveedores de la base de datos
-            
-            // Muestra los proveedors en un select
-            foreach ($proveedores as $proveedor) {
-                echo "<option value='{$proveedor['nif']}'>{$proveedor['nif']}</option>";
-            }
+                // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
+                $proveedores = traitDB::execDB("SELECT NIF 
+                                                FROM EMPRESA.PROVEEDOR");
+                // Obtiene los proveedores de la base de datos
+                // Muestra los proveedors en un select
+                foreach ($proveedores as $proveedor) {
+                    echo "<option value='{$proveedor['NIF']}'>{$proveedor['NIF']}</option>";
+                }
             ?>
         </select>
-        <label for="producto">producto:</label>
-        <select name="producto" id="producto">
+        <label for="PRODUCTO">producto:</label>
+        <select name="PRODUCTO" id="PRODUCTO">
             <?php
-            // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
-            
+                // Conecta a la base de datos (ajusta los detalles de la conexión según tu configuración)
+                $productos = traitDB::execDB("SELECT COD_PROD 
+                                            FROM EMPRESA.PRODUCTO");
 
-            // Obtiene los productos de la base de datos
-            
-            // Muestra los productos en un select
-            foreach ($productos as $producto) {
-                echo "<option value='{$producto['cod_prod']}'>{$producto['cod_prod']}</option>";
-            }
+                // Obtiene los productos de la base de datos
+                
+                // Muestra los productos en un select
+                foreach ($productos as $producto) {
+                    echo "<option value='{$producto['COD_PROD']}'>{$producto['COD_PROD']}</option>";
+                }
             ?>
         </select>
-        <label for="parametro">Parámetro de consulta:</label>
-        <input type="text" name="parametro" id="parametro">
+        <label for="PARAMETRO">Parámetro de consulta:</label>
+        <input type="text" name="PARAMETRO" id="PARAMETRO">
         <br>
         <input type="submit" value="Consultar">
-
+        PASAR A JSON<input type="checkbox" name="aJson" id="aJson">
+    </form>
 </body>
-
 </html>

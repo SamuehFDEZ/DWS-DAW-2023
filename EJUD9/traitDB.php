@@ -15,23 +15,22 @@ trait traitDB{
         }
     }
 
-    public function execDB($sql){
+    public static function execDB($sql){
         try {
-            return $sql->exec();
+            return self::connectDB()->query($sql);
         } catch (PDOException $e) {
             die("Conexión fallida: " . $e->getMessage());
         }
     }
-
+    
     public static function queryPreparadaDB($sql, $parametros){
         try {
             $conn = self::connectDB();
             $stmt = $conn->prepare($sql);
             $stmt->execute($parametros);
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $result;
+            return $stmt; // devuelve el objeto PDOStatement
         } catch (PDOException $e) {
-            die("Conexión fallida: " . $e->getMessage());
+            die("Error executing prepared query: " . $e->getMessage());
         }
     }
     
@@ -46,12 +45,11 @@ trait traitDB{
             $sql = "DROP TABLE INCIDENCIA IF EXISTS";
             $conn->exec($sql);
             $sql = "CREATE TABLE INCIDENCIA (
-                CODIGO INTEGER,
+                CODIGO INTEGER PRIMARY KEY,
                 ESTADO VARCHAR (100) NOT NULL,
                 PUESTO VARCHAR (15),
                 PROBLEMA VARCHAR(255),
-                RESOLUCION VARCHAR(255),
-                CONSTRAINT PK_CODIGO PRIMARY KEY(CODIGO)
+                RESOLUCION VARCHAR(255)
             )";
             $conn->exec($sql);
         } catch (PDOException $e) {

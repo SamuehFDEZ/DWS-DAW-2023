@@ -6,7 +6,7 @@ include_once __DIR__. "/../traitDB.php";
 class Incidencia{
     use traitDB;
     static $codigoIncidencia = 0;
-    static $contadorPendientes = 0;
+    static $contadorPendientes = 1;
     private $codigo; 
     private $numero;
     private $incidencia;
@@ -27,77 +27,85 @@ class Incidencia{
             $conn->exec($sql);
     
             $sql = "CREATE TABLE IF NOT EXISTS INCIDENCIA (
-                CODIGO INTEGER,
+                CODIGO INTEGER PRIMARY KEY,
                 ESTADO VARCHAR (100) NOT NULL,
                 PUESTO VARCHAR (15),
                 PROBLEMA VARCHAR(255),
-                RESOLUCION VARCHAR(255),
-                CONSTRAINT PK_CODIGO PRIMARY KEY(CODIGO)
+                RESOLUCION VARCHAR(255)
             )";
             $conn->exec($sql);
     
+    
         } catch (PDOException $e) {
-            die("Error resetting database: " . $e->getMessage());
+            die("Error al resetear la base de datos: " . $e->getMessage());
         }
     }
     
+    
     public static function creaIncidencia($num, $mensaje) {
         $self = new self($num, $mensaje);
-        $conn = self::connectDB();
         
-        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([self::$codigoIncidencia, $self->estado, $self->numero, $self->incidencia, $self->solucion]);
+        $sql = "INSERT INTO INCIDENCIA (CODIGO, ESTADO, PUESTO, PROBLEMA, RESOLUCION) VALUES 
+        (?, ?, ?, ?, ?)";
         
-        if ($stmt->rowCount() > 0) {
-            echo "Incidencia con código " . self::$codigoIncidencia . " creada correctamente.\n";
-            return $self; // Return the created Incidencia object
-        } else {
-            echo "No se ha podido crear la incidencia.\n";
-            return null;
+        $parametros = array(self::$contadorPendientes, $self->estado, $self->numero, $self->incidencia, $self->solucion);
+    
+        try {
+            $stmt = self::queryPreparadaDB($sql, $parametros);
+    
+            if ($stmt->rowCount() > 0) {
+                echo "Incidencia con código " . self::$contadorPendientes . " creada correctamente\n";
+                self::$contadorPendientes++; 
+                return $self; 
+            } 
+            else {
+                echo "No se ha podido crear la incidencia.\n";
+                return null;
+            }
+        } catch (PDOException $e) {
+            die("Error al crear la incidencia: " . $e->getMessage());
         }
     }
     
     
     public static function leeIncidencia($codigo){
-        $conn = traitDB::connectDB();
-        $sql = "SELECT * FROM INCIDENCIA WHERE CODIGO = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$codigo]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $result;
+        $sql = "SELECT * 
+                FROM INCIDENCIA 
+                WHERE CODIGO = :codigo";
+        $stmt = traitDB::queryPreparadaDB($sql, [':codigo' => $codigo]);
+        // Pasar el código como un array
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     public static function leeTodasIncidencias(){
-        $conn = traitDB::connectDB();
-        $sql = "SELECT * FROM INCIDENCIA";
-        $stmt = $conn->query($sql);
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+        $sql = "SELECT * 
+                FROM INCIDENCIA";
+        $result = self::connectDB()->query($sql);
         return $result;
     }
-    
+
     public function actualizaIncidencia($estado, $puesto, $problema, $solucion){
-        
-        $sql = "UPDATE INCIDENCIA SET ESTADO = '".$estado."', PUESTO = '".$puesto."', PROBLEMA = '".$problema."'., RESOLUCION = '".$solucion."'. WHERE CODIGO = ".$this->getCodigo()."";
-        $result = $this->execDB($sql);
+               
+        $sql = "UPDATE INCIDENCIAS.INCIDENCIA 
+                SET ESTADO = '".$estado."', PUESTO = '".$puesto."', PROBLEMA = '".$problema."', RESOLUCION = '".$solucion."' 
+                WHERE CODIGO = ".$this->getCodigo()."";
+        $result = self::execDB($sql);
+       
         if($result){
-            echo "exito";
+            echo "Incidencia ". $this->getCodigo() ." - Puesto: $this->numero - $puesto - ". $this->getEstado()." - ". $this->solucion." \n";
         }
         else{
             print "No se ha podido actualizar\n";
         }
-
     }
     
 
     public function borraIncidencia(){
-        $conn = traitDB::connectDB();
-        $sql = "DELETE FROM INCIDENCIA WHERE CODIGO = {$this->getCodigo()}";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        
+        $sql = "DELETE FROM INCIDENCIA 
+                WHERE CODIGO = ".$this->getCodigo()."";
+        $stmt = self::execDB($sql);
+
+        return $stmt;
     }
 
     
@@ -149,10 +157,9 @@ class Incidencia{
     public function resuelve($solucion){
         $this->solucion = $solucion;
         $this->estado = "Resuelto";
-        self::$codigoIncidencia--;
+        self::$contadorPendientes--; // Decrementar el contador de incidencias pendientes
     }
     
-
     public static function getPendientes(){
         return self::$codigoIncidencia. "\n";
         
