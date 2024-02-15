@@ -537,7 +537,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     INNER JOIN PROVEEDOR PV ON PR.PROVEEDOR = PV.NIF
                     ORDER BY CL.DNI, PR.COD_PROD";
             $result = $conn->query($sql);
-            printTablaComprasClientes($result);
+            if(isset($_POST["aJson"])){
+                header('Content-Type:application/json; charset=UTF-8');
+                $vectorDeClientes = [];
+                // creamos un array vacio para alamcenar todos los datos de las consultas (dni nombre apellidos, etc)
+                //iteramos sobre en el parametro (result) y la variable clientes ya son los datos de verdad
+                foreach ($result as $clientes) {
+                    //dentro del vector de clientes almacenamos la info de la query
+                    $vectorDeClientes[] = $clientes;   
+                }
+                // imprimimos en formato json lo que vamos metiendo al array
+                echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            }
+            else{
+                echo "<table><td>NOMBRE_CLIENTE</td><td>APELLIDOS_CLIENTE</td><td>COD_PROD</td><td>NOMBRE_PRODUCTO</td><td>NOMBRE_PROVEEDOR</td><td>FECHA</td><td>UDES</td></tr>";
+                foreach ($result as $clientes) {
+                    echo "<tr>
+                    <td>$clientes[NOMBRE_CLIENTE]</td>
+                    <td>$clientes[APELLIDOS_CLIENTE]</td>
+                    <td>$clientes[COD_PROD]</td>
+                    <td>$clientes[NOMBRE_PRODUCTO]</td>
+                    <td>$clientes[NOMBRE_PROVEEDOR]</td>
+                    <td>$clientes[FECHA]</td>
+                    <td>$clientes[UDES]</td>
+                    <tr>";
+                }
+                echo "<table>";
+            }
             break;
 
         case 'ComprasDeAnyo':
@@ -545,7 +571,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $anio = $_POST['PARAMETRO'];
             $sql = "SELECT * 
-            FROM COMPRA WHERE YEAR(FECHA) >= $anio ORDER BY FECHA";
+                    FROM COMPRA 
+                    WHERE YEAR(FECHA) >= $anio 
+                    ORDER BY FECHA";
             $result = $conn->query($sql);
             printTablaCompras($result);
             break;
