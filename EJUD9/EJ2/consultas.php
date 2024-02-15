@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     WHERE DNI = '$dni'";
             $result = $conn->query($sql, PDO::FETCH_ASSOC);
             printTablaClientes($result);
+            //return;
             break;
 
         case 'ListadoClientes':
@@ -76,6 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                     // imprimimos en formato json lo que vamos metiendo al array
                     echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                    return;
+
                 }
                 else{
                     echo "<table><tr><td>POBLACION</td><td>NUMERO_CLIENTES</td></tr>";
@@ -106,6 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -136,6 +141,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -168,6 +175,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -199,6 +208,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -230,6 +241,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -262,6 +275,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -296,6 +311,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td></tr>";
@@ -347,6 +364,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>NOMBRE</td></tr>";
@@ -377,6 +396,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>NIF</td><td>NOMBRE</td></tr>";
@@ -450,6 +471,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>PVP_MAXIMO </td></tr>";
@@ -477,6 +500,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
+
             }
             else{
                 echo "<table><tr><td>PVP_MINIMO</td></tr>";
@@ -504,6 +529,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
             }
             else{
                 echo "<table><tr><td>PVP_PROMEDIO</td></tr>";
@@ -548,6 +574,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 // imprimimos en formato json lo que vamos metiendo al array
                 echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+                return;
             }
             else{
                 echo "<table><td>NOMBRE_CLIENTE</td><td>APELLIDOS_CLIENTE</td><td>COD_PROD</td><td>NOMBRE_PRODUCTO</td><td>NOMBRE_PROVEEDOR</td><td>FECHA</td><td>UDES</td></tr>";

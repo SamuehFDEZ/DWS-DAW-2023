@@ -1,6 +1,5 @@
 <?php 
 
-include_once "./consultas.php";
     function printTablaClientes($datos){
         if(isset($_POST["aJson"])){
             header('Content-Type:application/json; charset=UTF-8');
@@ -15,6 +14,7 @@ include_once "./consultas.php";
             // JSON_UNESCAPED_UNICODE par que no se eliminen los acentos 
             // sin JSON_UNESCAPED_UNICODE (é) -> (\u00e9) con eso, se mantiene correcto
             echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            return;
         }
         else{
             echo "<table><tr><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td><td>DIRECCION</td><td>POBLACION</td><td>TELEFONO</td><td>FECHA_NAC</td></tr>";
@@ -37,6 +37,8 @@ include_once "./consultas.php";
             }
             // imprimimos en formato json lo que vamos metiendo al array
             echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            return;
+
         }
         else{
             echo "<table><tr><td>NIF</td><td>NOMBRE</td><td>DIRECCION</td></tr>";
@@ -60,6 +62,8 @@ include_once "./consultas.php";
             }
             // imprimimos en formato json lo que vamos metiendo al array
             echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            return;
+
         }
         else{
             echo "<table><tr><td>COD_PROD</td><td>NOMBRE</td><td>PROVEEDOR</td><td>PVP</td></tr>";
@@ -86,6 +90,8 @@ include_once "./consultas.php";
             }
             // imprimimos en formato json lo que vamos metiendo al array
             echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            return;
+
         }
         else{
             echo "<table><tr><td>CLIENTE</td><td>PRODUCTO</td><td>FECHA</td><td>UDES</td></tr>";
@@ -113,6 +119,7 @@ include_once "./consultas.php";
             }
             // imprimimos en formato json lo que vamos metiendo al array
             echo json_encode($vectorDeClientes, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            return;
         }
         else{
             echo "<table><td>DNI</td><td>NOMBRE</td><td>APELLIDOS</td><td>COD_PROD</td><td>NOMBRE</td><td>NOMBRE</td><td>FECHA</td><td>UDES</td></tr>";
